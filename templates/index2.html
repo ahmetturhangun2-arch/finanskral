@@ -1,702 +1,868 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="verify-admitad" content="0d9505d88f" />
-    <title>{{ page_title }}</title>
-    <meta name="description" content="{{ meta_description }}">
-    <meta name="robots" content="index,follow">
-    <link rel="canonical" href="{{ site_url }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+* {
+    box-sizing: border-box;
+}
 
-    <meta property="og:title" content="{{ page_title }}">
-    <meta property="og:description" content="{{ meta_description }}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ site_url }}">
-    <meta property="og:site_name" content="FinansKral">
+html {
+    scroll-behavior: smooth;
+}
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ page_title }}">
-    <meta name="twitter:description" content="{{ meta_description }}">
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top left, #053b39 0%, #031c37 38%, #07162d 100%);
+    color: #0f172a;
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+a {
+    text-decoration: none;
+}
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "name": "FinansKral",
-          "url": "{{ site_url }}"
-        },
-        {
-          "@type": "WebSite",
-          "name": "FinansKral",
-          "url": "{{ site_url }}"
-        },
-        {
-          "@type": "WebApplication",
-          "name": "FinansKral",
-          "url": "{{ site_url }}",
-          "applicationCategory": "FinanceApplication",
-          "operatingSystem": "All",
-          "description": "{{ meta_description }}",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "TRY"
-          }
-        }
-      ]
+.page-shell {
+    padding: 28px 16px 40px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.market-ticker-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(2, 6, 23, 0.92);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.topbar {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.25);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brand-text strong {
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.brand-text span {
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+.topnav {
+    display: flex;
+    gap: 16px;
+}
+
+.topnav a {
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.topnav a:hover {
+    color: #ffffff;
+}
+
+.hero {
+    margin-top: 20px;
+    padding: 38px 28px;
+    text-align: center;
+    border-radius: 26px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.56) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 30px 60px rgba(2, 8, 23, 0.22);
+}
+
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.headline-premium {
+    margin: 0;
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.subtitle {
+    max-width: 760px;
+    margin: 16px auto 0;
+    color: #cbd5e1;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.hero-stat {
+    min-width: 150px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(30, 41, 59, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-stat span {
+    display: block;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.hero-stat small {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.card,
+.premium-panel {
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.16);
+}
+
+.card {
+    padding: 26px;
+    margin-top: 22px;
+}
+
+.card-header,
+.fuel-window-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.card-kicker {
+    margin: 0 0 6px;
+    color: #10b981;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.card-header h2,
+.fuel-window h2,
+.seo-content h2,
+.chart-card h3,
+.result h3 {
+    margin: 0;
+    color: #0f172a;
+}
+
+.card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #ecfdf5;
+    font-size: 20px;
+}
+
+.card-desc {
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.fuel-window {
+    margin-top: 22px;
+    padding: 26px;
+}
+
+.fuel-selector-row {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.field-block {
+    min-width: 240px;
+}
+
+.field-block label,
+.input-grid label,
+.fuel-price-header label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.field-block select,
+.input-grid input,
+.input-grid select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+}
+
+.field-block select:focus,
+.input-grid input:focus,
+.input-grid select:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08);
+}
+
+.city-highlight {
+    min-width: 200px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.city-highlight span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.city-highlight strong {
+    color: #0f172a;
+    font-size: 18px;
+}
+
+.fuel-grid.single-city {
+    margin-top: 18px;
+}
+
+.fuel-city-card {
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e5e7eb;
+}
+
+.fuel-city {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.fuel-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.fuel-row:last-child {
+    border-bottom: 0;
+}
+
+.fuel-row span {
+    color: #64748b;
+}
+
+.fuel-row strong {
+    color: #0f172a;
+}
+
+.fuel-note {
+    margin-top: 12px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.tab-btn {
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    background: rgba(148, 163, 184, 0.16);
+    color: #e2e8f0;
+    transition: 0.2s ease;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.full-span {
+    grid-column: 1 / -1;
+}
+
+button[type="submit"] {
+    width: 100%;
+    margin-top: 18px;
+    border: 0;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(234, 88, 12, 0.25);
+}
+
+.score-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.score-card {
+    padding: 18px;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.score-card span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.score-card strong {
+    display: block;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.score-card small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.chart-card {
+    margin-top: 22px;
+    padding: 22px;
+    border-radius: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.result {
+    margin-top: 22px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.result-item {
+    padding: 14px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.result-item span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.result-item strong {
+    color: #0f172a;
+    font-size: 18px;
+}
+
+.result-total {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+    border: 1px solid #bbf7d0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.result-total span {
+    color: #166534;
+    font-weight: 700;
+}
+
+.result-total strong {
+    color: #166534;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.negative-total {
+    background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+    border-color: #fecaca;
+}
+
+.negative-total span,
+.negative-total strong {
+    color: #b91c1c;
+}
+
+.fuel-price-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-toggle-btn {
+    border: 0;
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.helper-text {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.editable-mode {
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.08) !important;
+}
+
+.ad-horizontal {
+    margin-top: 18px;
+    text-align: center;
+}
+
+.ad-badge {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.24);
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ad-horizontal-box {
+    min-height: 120px;
+    border-radius: 22px;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 22px;
+    color: #64748b;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+}
+
+.ad-horizontal-box strong {
+    color: #0f172a;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.ad-horizontal-box p {
+    margin-top: 10px;
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.side-ad {
+    position: fixed;
+    top: 136px;
+    z-index: 20;
+}
+
+.side-ad-right {
+    right: 18px;
+}
+
+.side-ad-inner {
+    width: 170px;
+}
+
+.side-ad-box {
+    min-height: 600px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    padding: 12px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+}
+
+.product-slider {
+    position: relative;
+    width: 100%;
+    height: 576px;
+}
+
+.product-slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 14px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    text-decoration: none;
+    transition: 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-slide.active {
+    display: flex;
+}
+
+.product-slide:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.22);
+}
+
+.product-slide-badge {
+    display: inline-block;
+    margin: 0 auto 12px auto;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.product-slide img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 14px;
+}
+
+.product-slide strong {
+    display: block;
+    color: #ffffff;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 12px;
+}
+
+.product-slide p {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 18px 0;
+}
+
+.product-slide span:last-child {
+    display: inline-block;
+    margin-top: auto;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #22c55e;
+    color: white;
+    font-weight: 700;
+}
+
+.top-product-slider {
+    position: relative;
+    width: 100%;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-product {
+    display: none;
+    width: 100%;
+    max-width: 520px;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 10px 14px;
+    transition: 0.25s ease;
+}
+
+.top-product.active {
+    display: flex;
+}
+
+.top-product:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.10);
+}
+
+.top-product img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.top-product-text {
+    text-align: left;
+}
+
+.top-product-text strong {
+    display: block;
+    color: #0f172a;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.top-product-text span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.footer {
+    text-align: center;
+    padding: 28px 10px 12px;
+    color: #e2e8f0;
+}
+
+.footer p {
+    margin: 6px 0;
+}
+
+.footer a {
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+.seo-content {
+    margin-top: 28px;
+    line-height: 1.8;
+}
+
+.seo-content h2 {
+    margin-bottom: 14px;
+}
+
+.seo-content p {
+    color: #475569;
+    margin-bottom: 14px;
+}
+
+.legal-hero {
+    margin-bottom: 20px;
+}
+
+.legal-card {
+    line-height: 1.8;
+}
+
+.legal-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #0f172a;
+}
+
+.legal-card p {
+    color: #475569;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.contact-highlight {
+    margin: 18px 0;
+    padding: 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.contact-highlight span {
+    display: block;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.contact-highlight strong {
+    font-size: 20px;
+    color: #0f172a;
+}
+
+@media (max-width: 1280px) {
+    .side-ad {
+        display: none;
     }
-    </script>
 
-    {% if adsense_enabled %}
-    <script async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_client }}"
-            crossorigin="anonymous"></script>
-    {% endif %}
-</head>
-<body>
-
-    <div class="side-ad side-ad-right">
-        <div class="side-ad-inner">
-            <span class="ad-badge">Reklam</span>
-            <div class="side-ad-box">
-                {% if adsense_enabled %}
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="{{ adsense_client }}"
-                     data-ad-slot="{{ adsense_right_slot }}"
-                     data-ad-format="auto"
-                     data-full-width-responsive="false"></ins>
-                {% else %}
-                <div class="product-slider" id="rightProductSlider">
-                    <a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank" rel="nofollow sponsored noopener" class="product-slide active">
-                        <div class="product-slide-badge">Önerilen Ürün</div>
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80" alt="Araç Telefon Tutucu">
-                        <strong>Araç Telefon Tutucu</strong>
-                        <p>Sürüşte daha rahat ve güvenli kullanım için pratik çözüm.</p>
-                        <span>İncele</span>
-                    </a>
-
-                    <a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank" rel="nofollow sponsored noopener" class="product-slide">
-                        <div class="product-slide-badge">İndirimli Ürün</div>
-                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80" alt="Hızlı Araç Şarj Cihazı">
-                        <strong>Hızlı Araç Şarj Cihazı</strong>
-                        <p>Type-C ve hızlı şarj desteğiyle pratik araç içi kullanım.</p>
-                        <span>İncele</span>
-                    </a>
-
-                    <a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank" rel="nofollow sponsored noopener" class="product-slide">
-                        <div class="product-slide-badge">Fırsat</div>
-                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80" alt="Araç Organizer">
-                        <strong>Araç Organizer</strong>
-                        <p>Araç içini daha düzenli tutmak isteyenler için ideal seçim.</p>
-                        <span>İncele</span>
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="market-ticker-wrap">
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-            {
-                "symbols": [
-                    {"proName": "FX_IDC:USDTRY", "title": "Dolar/TL"},
-                    {"proName": "FX_IDC:EURTRY", "title": "Euro/TL"},
-                    {"proName": "OANDA:XAUUSD", "title": "Ons Altın"},
-                    {"proName": "TVC:GOLD", "title": "Altın"}
-                ],
-                "showSymbolLogo": false,
-                "isTransparent": true,
-                "displayMode": "adaptive",
-                "colorTheme": "dark",
-                "locale": "tr"
-            }
-            </script>
-        </div>
-    </div>
-
-    <div class="page-shell">
-        <div class="container">
-
-            <div class="ad-horizontal top-ad safe-ad-gap">
-                <span class="ad-badge">Sponsorlu</span>
-                <div class="ad-horizontal-box">
-                    {% if adsense_enabled %}
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="{{ adsense_client }}"
-                         data-ad-slot="{{ adsense_top_slot }}"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    {% else %}
-                    <strong>Üst Banner Reklam</strong>
-                    <p>728x90 / responsive banner alanı</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <header class="topbar">
-                <div class="brand">
-                    <div class="brand-mark">FK</div>
-                    <div class="brand-text">
-                        <strong>FinansKral</strong>
-                        <span>Karar destek araçları</span>
-                    </div>
-                </div>
-
-                <nav class="topnav">
-                    <a href="#maas-tab" onclick="showTab('maas'); return false;">Maaş</a>
-                    <a href="#arac-tab" onclick="showTab('arac'); return false;">Araç</a>
-                </nav>
-            </header>
-
-            <section class="hero">
-                <div class="hero-badge">Premium Finansal Araçlar</div>
-                <h1 class="headline-premium">Maaş Gelir Gider ve Araç Kullanım Maliyeti Hesaplama</h1>
-                <p class="subtitle">
-                    Maaş gelir-gider dengenizi ve araç kullanım maliyetlerinizi profesyonel seviyede analiz edin.
-                </p>
-
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <span>2</span>
-                        <small>Hesaplayıcı</small>
-                    </div>
-                    <div class="hero-stat">
-                        <span>Akıllı</span>
-                        <small>Otomatik veri</small>
-                    </div>
-                    <div class="hero-stat">
-                        <span>Detaylı</span>
-                        <small>Premium görünüm</small>
-                    </div>
-                </div>
-            </section>
-
-            <section class="fuel-window card premium-panel">
-                <div class="fuel-window-header">
-                    <div>
-                        <p class="card-kicker">Türkiye Akaryakıt Görünümü</p>
-                        <h2>Türkiye Güncel Yakıt Fiyatları</h2>
-                    </div>
-                    <div class="card-icon">⛽</div>
-                </div>
-
-                <p class="card-desc">
-                    Şehir seçerek benzin, motorin ve LPG fiyatlarını hızlıca görüntüleyin.
-                </p>
-
-                <form method="POST" class="fuel-city-form">
-                    <input type="hidden" name="form_type" value="arac">
-                    <input type="hidden" name="km" value="{{ arac_form.km }}">
-                    <input type="hidden" name="tuketim" value="{{ arac_form.tuketim }}">
-                    <input type="hidden" name="yakit_tipi" value="{{ arac_form.yakit_tipi }}">
-                    <input type="hidden" name="yakit" value="{{ arac_form.yakit }}">
-                    <input type="hidden" name="sigorta" value="{{ arac_form.sigorta }}">
-                    <input type="hidden" name="bakim" value="{{ arac_form.bakim }}">
-                    <input type="hidden" name="mtv" value="{{ arac_form.mtv }}">
-                    <input type="hidden" name="manuel_yakit" value="{{ arac_form.manuel_yakit }}">
-
-                    <div class="fuel-selector-row">
-                        <div class="field-block">
-                            <label>Şehir Seç</label>
-                            <select name="fuel_city" onchange="this.form.submit()">
-                                {% for city_key, city_data in fuel_prices.items() %}
-                                <option value="{{ city_key }}" {% if city_key == selected_city %}selected{% endif %}>
-                                    {{ city_data.label }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="city-highlight">
-                            <span>Seçili Şehir</span>
-                            <strong>{{ selected_fuel_data.label }}</strong>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="fuel-grid single-city">
-                    <div class="fuel-city-card glass-card">
-                        <div class="fuel-city">{{ selected_fuel_data.label }}</div>
-
-                        <div class="fuel-row">
-                            <span>Benzin</span>
-                            <strong>{{ "%.2f"|format(selected_fuel_data.gasoline)|replace(".", ",") }} TL</strong>
-                        </div>
-
-                        <div class="fuel-row">
-                            <span>Motorin</span>
-                            <strong>{{ "%.2f"|format(selected_fuel_data.diesel)|replace(".", ",") }} TL</strong>
-                        </div>
-
-                        <div class="fuel-row">
-                            <span>LPG</span>
-                            <strong>{{ "%.2f"|format(selected_fuel_data.lpg)|replace(".", ",") }} TL</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="fuel-note">{{ fuel_note }}</p>
-            </section>
-
-            <div class="ad-horizontal content-ad safe-ad-gap">
-                <span class="ad-badge">Reklam</span>
-                <div class="ad-horizontal-box">
-                    {% if adsense_enabled %}
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="{{ adsense_client }}"
-                         data-ad-slot="{{ adsense_content_slot }}"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    {% else %}
-                    <strong>İçerik Arası Reklam</strong>
-                    <p>Responsive içerik içi reklam alanı</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="tabs">
-                <button type="button" class="tab-btn" id="maas-btn" onclick="showTab('maas')">Maaş Gelir-Gider</button>
-                <button type="button" class="tab-btn" id="arac-btn" onclick="showTab('arac')">Araç Kullanım Maliyeti</button>
-            </div>
-
-            <div id="maas-tab" class="tab-content">
-                <div class="card premium-panel">
-                    <div class="card-header">
-                        <div>
-                            <p class="card-kicker">Finans Aracı</p>
-                            <h2>Maaş Gelir-Gider Analizi</h2>
-                        </div>
-                        <div class="card-icon">₺</div>
-                    </div>
-
-                    <p class="card-desc">
-                        Brüt maaşınızı, yan haklarınızı ve aylık giderlerinizi girerek ay sonu kalan tutarı görün.
-                    </p>
-
-                    <form method="POST" id="maasForm">
-                        <input type="hidden" name="form_type" value="maas">
-
-                        <div class="input-grid">
-                            <div>
-                                <label>Brüt Maaş</label>
-                                <input type="number" name="brut" value="{{ maas_form.brut }}" required>
-                            </div>
-
-                            <div>
-                                <label>Yemek</label>
-                                <input type="number" name="yemek" value="{{ maas_form.yemek }}">
-                            </div>
-
-                            <div>
-                                <label>Yol</label>
-                                <input type="number" name="yol" value="{{ maas_form.yol }}">
-                            </div>
-
-                            <div>
-                                <label>Kira</label>
-                                <input type="number" name="kira" value="{{ maas_form.kira }}">
-                            </div>
-
-                            <div>
-                                <label>Fatura</label>
-                                <input type="number" name="fatura" value="{{ maas_form.fatura }}">
-                            </div>
-
-                            <div>
-                                <label>Market</label>
-                                <input type="number" name="market" value="{{ maas_form.market }}">
-                            </div>
-
-                            <div class="full-span">
-                                <label>Diğer Giderler</label>
-                                <input type="number" name="diger" value="{{ maas_form.diger }}">
-                            </div>
-                        </div>
-
-                        <button type="submit">Detaylı Maaş Analizi Yap</button>
-                    </form>
-
-                    {% if maas_sonuc %}
-                    <div class="score-strip">
-                        <div class="score-card">
-                            <span>Finansal Denge Skoru</span>
-                            <strong>{{ maas_sonuc.maas_skor }}/100</strong>
-                            <small>{{ maas_sonuc.maas_skor_yorum }}</small>
-                        </div>
-                        <div class="score-card">
-                            <span>Net Maaş</span>
-                            <strong>{{ maas_sonuc.net_maas }}</strong>
-                            <small>Kesintiler sonrası</small>
-                        </div>
-                        <div class="score-card">
-                            <span>Ay Sonu Kalan</span>
-                            <strong>{{ maas_sonuc.ay_sonu_kalan }}</strong>
-                            <small>Giderler sonrası</small>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <h3>Maaş Dağılımı</h3>
-                        <canvas id="maasChart"></canvas>
-                    </div>
-
-                    <div class="result">
-                        <h3>Maaş Sonuçları</h3>
-
-                        <div class="result-grid">
-                            <div class="result-item"><span>Brüt Maaş</span><strong>{{ maas_sonuc.brut_maas }}</strong></div>
-                            <div class="result-item"><span>SGK Kesintisi</span><strong>{{ maas_sonuc.sgk }}</strong></div>
-                            <div class="result-item"><span>İşsizlik Kesintisi</span><strong>{{ maas_sonuc.issizlik }}</strong></div>
-                            <div class="result-item"><span>Vergi Matrahı</span><strong>{{ maas_sonuc.vergi_matrahi }}</strong></div>
-                            <div class="result-item"><span>Gelir Vergisi</span><strong>{{ maas_sonuc.vergi }}</strong></div>
-                            <div class="result-item"><span>Toplam Kesinti</span><strong>{{ maas_sonuc.toplam_kesinti }}</strong></div>
-                            <div class="result-item"><span>Kesintiler Sonrası Kalan</span><strong>{{ maas_sonuc.maastan_kalan }}</strong></div>
-                            <div class="result-item"><span>Yan Haklar</span><strong>{{ maas_sonuc.yan_haklar }}</strong></div>
-                            <div class="result-item"><span>Kira</span><strong>{{ maas_sonuc.kira }}</strong></div>
-                            <div class="result-item"><span>Fatura</span><strong>{{ maas_sonuc.fatura }}</strong></div>
-                            <div class="result-item"><span>Market</span><strong>{{ maas_sonuc.market }}</strong></div>
-                            <div class="result-item"><span>Diğer Giderler</span><strong>{{ maas_sonuc.diger }}</strong></div>
-                            <div class="result-item"><span>Toplam Gider</span><strong>{{ maas_sonuc.toplam_gider }}</strong></div>
-                            <div class="result-item"><span>İşveren SGK Payı</span><strong>{{ maas_sonuc.isveren_sgk }}</strong></div>
-                            <div class="result-item"><span>İşveren Toplam Maliyeti</span><strong>{{ maas_sonuc.isveren_maliyeti }}</strong></div>
-                        </div>
-
-                        <div class="result-total {% if maas_sonuc.ay_sonu_kalan_raw < 0 %}negative-total{% endif %}">
-                            <span>Ay Sonu Kalan</span>
-                            <strong>{{ maas_sonuc.ay_sonu_kalan }}</strong>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div id="arac-tab" class="tab-content">
-                <div class="card premium-panel">
-                    <div class="card-header">
-                        <div>
-                            <p class="card-kicker">Maliyet Aracı</p>
-                            <h2>Araç Kullanım Maliyeti Hesaplama</h2>
-                        </div>
-                        <div class="card-icon">🚗</div>
-                    </div>
-
-                    <p class="card-desc">
-                        Şehir ve yakıt tipine göre fiyatı otomatik doldurabilir, isterseniz elle düzenleyebilirsiniz.
-                    </p>
-
-                    <form method="POST" id="aracForm">
-                        <input type="hidden" name="form_type" value="arac">
-                        <input type="hidden" name="manuel_yakit" id="manuel_yakit" value="{{ arac_form.manuel_yakit }}">
-
-                        <div class="input-grid">
-                            <div>
-                                <label>Şehir</label>
-                                <select name="fuel_city" id="fuel_city" onchange="setFuelPriceBySelection()">
-                                    {% for city_key, city_data in fuel_prices.items() %}
-                                    <option value="{{ city_key }}" {% if city_key == arac_form.fuel_city %}selected{% endif %}>{{ city_data.label }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label>Yakıt Tipi</label>
-                                <select name="yakit_tipi" id="yakit_tipi" onchange="setFuelPriceBySelection()">
-                                    <option value="gasoline" {% if arac_form.yakit_tipi == 'gasoline' %}selected{% endif %}>Benzin</option>
-                                    <option value="diesel" {% if arac_form.yakit_tipi == 'diesel' %}selected{% endif %}>Motorin</option>
-                                    <option value="lpg" {% if arac_form.yakit_tipi == 'lpg' %}selected{% endif %}>LPG</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label>Aylık KM</label>
-                                <input type="number" name="km" value="{{ arac_form.km }}" required>
-                            </div>
-
-                            <div>
-                                <label>Tüketim (lt/100km)</label>
-                                <input type="number" step="0.1" name="tuketim" value="{{ arac_form.tuketim }}" required>
-                            </div>
-
-                            <div class="full-span">
-                                <div class="fuel-price-header">
-                                    <label>Yakıt Fiyatı</label>
-                                    <button type="button" class="mini-toggle-btn" id="manualToggleBtn" onclick="toggleManualFuelPrice()">Elle Düzenle</button>
-                                </div>
-                                <input type="number" step="0.01" name="yakit" id="yakit_fiyati" value="{{ arac_form.yakit }}" required>
-                                <small class="helper-text" id="fuelHelperText">Şehir ve yakıt tipine göre otomatik doldurulur.</small>
-                            </div>
-
-                            <div>
-                                <label>Sigorta (Yıllık)</label>
-                                <input type="number" name="sigorta" value="{{ arac_form.sigorta }}" required>
-                            </div>
-
-                            <div>
-                                <label>Bakım (Yıllık)</label>
-                                <input type="number" name="bakim" value="{{ arac_form.bakim }}" required>
-                            </div>
-
-                            <div class="full-span">
-                                <label>MTV (Yıllık)</label>
-                                <input type="number" name="mtv" value="{{ arac_form.mtv }}" required>
-                            </div>
-                        </div>
-
-                        <button type="submit">Araç Maliyetini Hesapla</button>
-                    </form>
-
-                    {% if arac_sonuc %}
-                    <div class="score-strip">
-                        <div class="score-card">
-                            <span>Araç Maliyet Skoru</span>
-                            <strong>{{ arac_sonuc.arac_skor }}/100</strong>
-                            <small>{{ arac_sonuc.arac_skor_yorum }}</small>
-                        </div>
-                        <div class="score-card">
-                            <span>Aylık Toplam</span>
-                            <strong>{{ arac_sonuc.aylik_toplam }}</strong>
-                            <small>Tüm giderler</small>
-                        </div>
-                        <div class="score-card">
-                            <span>KM Başı</span>
-                            <strong>{{ arac_sonuc.km_basi_maliyet }}</strong>
-                            <small>Birim maliyet</small>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <h3>Araç Gider Dağılımı</h3>
-                        <canvas id="aracChart"></canvas>
-                    </div>
-
-                    <div class="result">
-                        <h3>Araç Sonuçları</h3>
-
-                        <div class="result-grid">
-                            <div class="result-item"><span>Aylık Yakıt Gideri</span><strong>{{ arac_sonuc.aylik_yakit }}</strong></div>
-                            <div class="result-item"><span>Aylık Sigorta Payı</span><strong>{{ arac_sonuc.aylik_sigorta }}</strong></div>
-                            <div class="result-item"><span>Aylık Bakım Payı</span><strong>{{ arac_sonuc.aylik_bakim }}</strong></div>
-                            <div class="result-item"><span>Aylık MTV Payı</span><strong>{{ arac_sonuc.aylik_mtv }}</strong></div>
-                            <div class="result-item"><span>KM Başına Maliyet</span><strong>{{ arac_sonuc.km_basi_maliyet }}</strong></div>
-                        </div>
-
-                        <div class="result-total">
-                            <span>Aylık Toplam Maliyet</span>
-                            <strong>{{ arac_sonuc.aylik_toplam }}</strong>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <section class="seo-content card premium-panel">
-                <h2>Maaş ve Araç Gideri Nasıl Hesaplanır?</h2>
-                <p>
-                    Maaş gelir gider hesaplama, bir kişinin aylık finansal dengesini görmek için yapılır. Brüt maaş üzerinden SGK,
-                    işsizlik kesintisi ve gelir vergisi hesaplanır; ardından yemek ve yol gibi yan haklar eklenerek net maaş bulunur.
-                </p>
-                <p>
-                    Araç kullanım maliyeti hesaplama ise yakıt tüketimi, sigorta, bakım ve MTV gibi masrafların aylık ortalamaya
-                    bölünmesi ile yapılır. Böylece bir aracın gerçek aylık maliyeti ve kilometre başına yükü daha net görülür.
-                </p>
-                <p>
-                    Bu sayfa, maaş hesaplama ve araç maliyeti analizi yapan kullanıcıların hızlı ve anlaşılır sonuç alabilmesi için
-                    hazırlanmıştır. Türkiye’de günlük finans planlaması yapan kullanıcılar için pratik bir karar destek aracıdır.
-                </p>
-            </section>
-
-            <div class="ad-horizontal bottom-ad safe-ad-gap">
-                <span class="ad-badge">Sponsorlu</span>
-                <div class="ad-horizontal-box">
-                    {% if adsense_enabled %}
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="{{ adsense_client }}"
-                         data-ad-slot="{{ adsense_bottom_slot }}"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    {% else %}
-                    <strong>Alt Banner Reklam</strong>
-                    <p>Footer üstü geniş reklam alanı</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <footer class="footer">
-                <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
-                <p>
-                    <a href="/about">Hakkımızda</a> |
-                    <a href="/privacy">Gizlilik Politikası</a> |
-                    <a href="/contact">İletişim</a>
-                </p>
-            </footer>
-        </div>
-    </div>
-
-    <script>
-        const fuelData = {{ fuel_prices|tojson }};
-        let manualFuelMode = {{ 'true' if arac_form.manuel_yakit == 'on' else 'false' }};
-
-        function showTab(tabName) {
-            const maasTab = document.getElementById("maas-tab");
-            const aracTab = document.getElementById("arac-tab");
-            const maasBtn = document.getElementById("maas-btn");
-            const aracBtn = document.getElementById("arac-btn");
-
-            maasTab.classList.remove("active");
-            aracTab.classList.remove("active");
-            maasBtn.classList.remove("active");
-            aracBtn.classList.remove("active");
-
-            if (tabName === "maas") {
-                maasTab.classList.add("active");
-                maasBtn.classList.add("active");
-            } else {
-                aracTab.classList.add("active");
-                aracBtn.classList.add("active");
-            }
-        }
-
-        function updateFuelInputState() {
-            const fuelPriceInput = document.getElementById("yakit_fiyati");
-            const manualToggleBtn = document.getElementById("manualToggleBtn");
-            const manualInput = document.getElementById("manuel_yakit");
-            const helperText = document.getElementById("fuelHelperText");
-
-            if (!fuelPriceInput || !manualToggleBtn || !manualInput || !helperText) return;
-
-            if (manualFuelMode) {
-                fuelPriceInput.removeAttribute("readonly");
-                fuelPriceInput.classList.add("editable-mode");
-                manualToggleBtn.textContent = "Otomatiğe Dön";
-                manualInput.value = "on";
-                helperText.textContent = "Elle düzenleme açık. İstersen otomatiğe dönebilirsin.";
-            } else {
-                fuelPriceInput.setAttribute("readonly", "readonly");
-                fuelPriceInput.classList.remove("editable-mode");
-                manualToggleBtn.textContent = "Elle Düzenle";
-                manualInput.value = "off";
-                helperText.textContent = "Şehir ve yakıt tipine göre otomatik doldurulur.";
-            }
-        }
-
-        function setFuelPriceBySelection() {
-            const citySelect = document.getElementById("fuel_city");
-            const fuelTypeSelect = document.getElementById("yakit_tipi");
-            const fuelPriceInput = document.getElementById("yakit_fiyati");
-
-            if (!citySelect || !fuelTypeSelect || !fuelPriceInput) return;
-            if (manualFuelMode) return;
-
-            const city = citySelect.value;
-            const fuelType = fuelTypeSelect.value;
-
-            if (fuelData[city] && fuelData[city][fuelType] !== undefined) {
-                fuelPriceInput.value = fuelData[city][fuelType].toFixed(2);
-            }
-        }
-
-        function toggleManualFuelPrice() {
-            manualFuelMode = !manualFuelMode;
-            updateFuelInputState();
-            if (!manualFuelMode) {
-                setFuelPriceBySelection();
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            showTab("{{ active_tab }}");
-            updateFuelInputState();
-            setFuelPriceBySelection();
-
-            const productSlides = document.querySelectorAll("#rightProductSlider .product-slide");
-            let currentSlide = 0;
-
-            if (productSlides.length > 1) {
-                setInterval(() => {
-                    productSlides[currentSlide].classList.remove("active");
-                    currentSlide = (currentSlide + 1) % productSlides.length;
-                    productSlides[currentSlide].classList.add("active");
-                }, 5000);
-            }
-
-            {% if maas_sonuc %}
-            const maasCtx = document.getElementById('maasChart');
-            if (maasCtx) {
-                new Chart(maasCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Net Maaş', 'Toplam Gider', 'Ay Sonu Kalan'],
-                        datasets: [{
-                            label: 'TL',
-                            data: [
-                                {{ maas_sonuc.net_maas_raw }},
-                                {{ maas_sonuc.toplam_gider_raw }},
-                                {{ maas_sonuc.ay_sonu_kalan_raw }}
-                            ],
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
-            {% endif %}
-
-            {% if arac_sonuc %}
-            const aracCtx = document.getElementById('aracChart');
-            if (aracCtx) {
-                new Chart(aracCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Yakıt', 'Sigorta', 'Bakım', 'MTV'],
-                        datasets: [{
-                            label: 'TL',
-                            data: [
-                                {{ arac_sonuc.aylik_yakit_raw }},
-                                {{ arac_sonuc.aylik_sigorta_raw }},
-                                {{ arac_sonuc.aylik_bakim_raw }},
-                                {{ arac_sonuc.aylik_mtv_raw }}
-                            ],
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
-            {% endif %}
-
-            {% if adsense_enabled %}
-            document.querySelectorAll(".adsbygoogle").forEach(function () {
-                try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } catch (e) {
-                    console.log("AdSense yükleme hatası:", e);
-                }
-            });
-            {% endif %}
-        });
-    </script>
-</body>
-</html>
+    .container {
+        max-width: 980px;
+    }
+}
+
+@media (max-width: 900px) {
+    .input-grid,
+    .score-strip,
+    .result-grid,
+    .tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .topnav {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .result-total {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .top-product {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .top-product-text {
+        text-align: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 28px 18px;
+    }
+
+    .card,
+    .fuel-window {
+        padding: 20px;
+    }
+
+    .ad-horizontal-box strong {
+        font-size: 22px;
+    }
+
+    .headline-premium {
+        font-size: 34px;
+    }
+
+    .top-product img {
+        width: 60px;
+        height: 60px;
+    }
+}
