@@ -265,7 +265,7 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)7
+    app.run(debug=True)
 @app.route("/about")
 def about():
     return render_template("about.html")
