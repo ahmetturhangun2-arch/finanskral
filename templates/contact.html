@@ -1,9 +1,90 @@
-<h1>İletişim</h1>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim | FinansKral</title>
+    <meta name="description" content="FinansKral iletişim sayfası.">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
 
-<p>
-Bizimle iletişime geçmek için:
-</p>
+    <div class="market-ticker-wrap">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
+                    {"proName": "FX_IDC:USDTRY", "title": "Dolar/TL"},
+                    {"proName": "FX_IDC:EURTRY", "title": "Euro/TL"},
+                    {"proName": "OANDA:XAUUSD", "title": "Ons Altın"},
+                    {"proName": "TVC:GOLD", "title": "Altın"}
+                ],
+                "showSymbolLogo": false,
+                "isTransparent": true,
+                "displayMode": "adaptive",
+                "colorTheme": "dark",
+                "locale": "tr"
+            }
+            </script>
+        </div>
+    </div>
 
-<p>
-Email: finanskral@example.com
-</p>
+    <div class="page-shell">
+        <div class="container">
+
+            <header class="topbar">
+                <div class="brand">
+                    <div class="brand-mark">FK</div>
+                    <div class="brand-text">
+                        <strong>FinansKral</strong>
+                        <span>Karar destek araçları</span>
+                    </div>
+                </div>
+
+                <nav class="topnav">
+                    <a href="/">Ana Sayfa</a>
+                    <a href="/about">Hakkımızda</a>
+                    <a href="/privacy">Gizlilik</a>
+                    <a href="/contact">İletişim</a>
+                </nav>
+            </header>
+
+            <section class="hero legal-hero">
+                <div class="hero-badge">Destek</div>
+                <h1 class="headline-premium">İletişim</h1>
+                <p class="subtitle">
+                    Görüş, öneri ve iş birlikleri için iletişim kanalları.
+                </p>
+            </section>
+
+            <section class="card premium-panel legal-card">
+                <h2>Bize Ulaşın</h2>
+                <p>
+                    FinansKral ile ilgili öneri, geri bildirim veya iş birliği talepleriniz için aşağıdaki e-posta adresi üzerinden iletişime geçebilirsiniz.
+                </p>
+
+                <div class="contact-highlight">
+                    <span>E-posta</span>
+                    <strong>finanskral@example.com</strong>
+                </div>
+
+                <p>
+                    Dilerseniz ana sayfadaki araçları kullanarak deneyiminizi test edebilir, gördüğünüz eksikleri veya geliştirme önerilerini de paylaşabilirsiniz.
+                </p>
+            </section>
+
+            <footer class="footer">
+                <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
+                <p>
+                    <a href="/about">Hakkımızda</a> |
+                    <a href="/privacy">Gizlilik Politikası</a> |
+                    <a href="/contact">İletişim</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

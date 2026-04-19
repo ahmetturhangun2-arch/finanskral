@@ -800,3 +800,54 @@ button[type="submit"]:hover {
     color: #475569;
     margin-bottom: 14px;
 }
+
+.legal-hero {
+    margin-bottom: 20px;
+}
+
+.legal-card {
+    line-height: 1.8;
+}
+
+.legal-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #0f172a;
+}
+
+.legal-card p {
+    color: #475569;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.contact-highlight {
+    margin: 18px 0;
+    padding: 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.contact-highlight span {
+    display: block;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.contact-highlight strong {
+    font-size: 20px;
+    color: #0f172a;
+}
+
+.footer a {
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}

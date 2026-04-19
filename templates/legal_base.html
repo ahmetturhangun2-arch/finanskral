@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinansKral{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="market-ticker-wrap">
+        <div class="legal-topbar">
+            <a href="/" class="legal-brand">FinansKral</a>
+            <div class="legal-nav">
+                <a href="/">Ana Sayfa</a>
+                <a href="/about">Hakkımızda</a>
+                <a href="/privacy">Gizlilik Politikası</a>
+                <a href="/contact">İletişim</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="container legal-container">
+            <div class="legal-hero">
+                <span class="legal-badge">Kurumsal Bilgi</span>
+                <h1>{% block hero_title %}FinansKral{% endblock %}</h1>
+                <p>{% block hero_desc %}Kullanıcı odaklı finansal araçlar ve şeffaf bilgi politikası.{% endblock %}</p>
+            </div>
+
+            <div class="legal-card">
+                {% block content %}{% endblock %}
+            </div>
+
+            <footer class="footer legal-footer">
+                <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
+                <p>
+                    <a href="/">Ana Sayfa</a> |
+                    <a href="/about">Hakkımızda</a> |
+                    <a href="/privacy">Gizlilik Politikası</a> |
+                    <a href="/contact">İletişim</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

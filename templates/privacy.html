@@ -1,2 +1,104 @@
-<h1>Gizlilik Politikası</h1>
-<p>Bu site kullanıcı verisi toplamaz. Reklam hizmetleri çerez kullanabilir.</p>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası | FinansKral</title>
+    <meta name="description" content="FinansKral gizlilik politikası.">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="market-ticker-wrap">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
+                    {"proName": "FX_IDC:USDTRY", "title": "Dolar/TL"},
+                    {"proName": "FX_IDC:EURTRY", "title": "Euro/TL"},
+                    {"proName": "OANDA:XAUUSD", "title": "Ons Altın"},
+                    {"proName": "TVC:GOLD", "title": "Altın"}
+                ],
+                "showSymbolLogo": false,
+                "isTransparent": true,
+                "displayMode": "adaptive",
+                "colorTheme": "dark",
+                "locale": "tr"
+            }
+            </script>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="container">
+
+            <header class="topbar">
+                <div class="brand">
+                    <div class="brand-mark">FK</div>
+                    <div class="brand-text">
+                        <strong>FinansKral</strong>
+                        <span>Karar destek araçları</span>
+                    </div>
+                </div>
+
+                <nav class="topnav">
+                    <a href="/">Ana Sayfa</a>
+                    <a href="/about">Hakkımızda</a>
+                    <a href="/privacy">Gizlilik</a>
+                    <a href="/contact">İletişim</a>
+                </nav>
+            </header>
+
+            <section class="hero legal-hero">
+                <div class="hero-badge">Yasal</div>
+                <h1 class="headline-premium">Gizlilik Politikası</h1>
+                <p class="subtitle">
+                    Kullanıcı deneyimi, veri güvenliği ve üçüncü taraf hizmetler hakkında bilgilendirme.
+                </p>
+            </section>
+
+            <section class="card premium-panel legal-card">
+                <h2>Genel Bilgilendirme</h2>
+                <p>
+                    FinansKral, kullanıcıların yaptığı finansal hesaplamaları görüntülemek ve hesaplama deneyimini sunmak amacıyla çalışır.
+                </p>
+
+                <h2>Kişisel Veriler</h2>
+                <p>
+                    Site üzerinde kullanıcıdan zorunlu üyelik veya kimlik doğrulama gerektiren bir kişisel veri talep edilmez. Kullanıcı tarafından
+                    girilen hesaplama verileri sunucu tarafında kalıcı kullanıcı profili olarak tutulmaz.
+                </p>
+
+                <h2>Çerezler ve Üçüncü Taraf Hizmetler</h2>
+                <p>
+                    Site performans, analiz veya reklam amaçlı bazı üçüncü taraf hizmetler kullanabilir. Bu hizmetler kendi politikaları kapsamında
+                    çerez teknolojilerinden yararlanabilir.
+                </p>
+
+                <h2>Reklam Hizmetleri</h2>
+                <p>
+                    Gelecekte Google AdSense gibi reklam sağlayıcıları kullanılabilir. Bu tür hizmetler, kullanıcıya daha uygun reklam göstermek için
+                    çerezlerden yararlanabilir.
+                </p>
+
+                <h2>Politika Güncellemeleri</h2>
+                <p>
+                    Gizlilik politikası gerektiğinde güncellenebilir. Güncel metin bu sayfa üzerinden yayınlanır.
+                </p>
+            </section>
+
+            <footer class="footer">
+                <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
+                <p>
+                    <a href="/about">Hakkımızda</a> |
+                    <a href="/privacy">Gizlilik Politikası</a> |
+                    <a href="/contact">İletişim</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
