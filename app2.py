@@ -37,7 +37,7 @@ def sitemap_xml():
     xml = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/</loc>
+    <loc>https://finanskral.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -264,16 +264,20 @@ def home():
     )
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
 @app.route("/about")
 def about():
     return render_template("about.html")
+
 
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
 
+
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta name="verify-admitad" content="0d9505d88f" />
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="verify-admitad" content="0d9505d88f" />
     <title>{{ page_title }}</title>
     <meta name="description" content="{{ meta_description }}">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="{{ site_url }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <meta property="og:title" content="{{ page_title }}">
     <meta property="og:description" content="{{ meta_description }}">
@@ -76,14 +76,15 @@
                      data-ad-slot="{{ adsense_right_slot }}"
                      data-ad-format="auto"
                      data-full-width-responsive="false"></ins>
+                {% else %}
                 <a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank" rel="nofollow sponsored noopener" class="affiliate-ad-box">
-    <div class="affiliate-ad-content">
-        <span class="affiliate-ad-label">Önerilen Fırsat</span>
-        <strong>AliExpress Fırsatları</strong>
-        <p>Uygun fiyatlı ürünleri incele, kampanyaları kaçırma.</p>
-        <span class="affiliate-ad-button">İncele</span>
-    </div>
-</a>
+                    <div class="affiliate-ad-content">
+                        <span class="affiliate-ad-label">Önerilen Fırsat</span>
+                        <strong>AliExpress Fırsatları</strong>
+                        <p>Uygun fiyatlı ürünleri incele, kampanyaları kaçırma.</p>
+                        <span class="affiliate-ad-button">İncele</span>
+                    </div>
+                </a>
                 {% endif %}
             </div>
         </div>
@@ -124,15 +125,9 @@
                          data-ad-format="auto"
                          data-full-width-responsive="true"></ins>
                     {% else %}
-<a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank" rel="nofollow sponsored noopener" class="affiliate-ad-box">
-    <div class="affiliate-ad-content">
-        <span class="affiliate-ad-label">Önerilen Fırsat</span>
-        <strong>AliExpress Fırsatları</strong>
-        <p>Uygun fiyatlı ürünleri incele, kampanyaları kaçırma.</p>
-        <span class="affiliate-ad-button">İncele</span>
-    </div>
-</a>
-{% endif %}
+                    <strong>Üst Banner Reklam</strong>
+                    <p>728x90 / responsive banner alanı</p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -253,7 +248,7 @@
                          data-full-width-responsive="true"></ins>
                     {% else %}
                     <strong>İçerik Arası Reklam</strong>
-                    <p>Responsive içerik içi AdSense alanı</p>
+                    <p>Responsive içerik içi reklam alanı</p>
                     {% endif %}
                 </div>
             </div>
@@ -528,11 +523,11 @@
 
             <footer class="footer">
                 <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
-		<p>	
-    			<a href="/about">Hakkımızda</a> |
-   			 <a href="/privacy">Gizlilik Politikası</a> |
-    			<a href="/contact">İletişim</a>
-		</p>	
+                <p>
+                    <a href="/about">Hakkımızda</a> |
+                    <a href="/privacy">Gizlilik Politikası</a> |
+                    <a href="/contact">İletişim</a>
+                </p>
             </footer>
         </div>
     </div>
@@ -677,8 +672,4 @@
     </script>
 </body>
 </html>
-<h3>💡 Önerilen Ürünler</h3>
-
-<a href="https://rzekl.com/g/1e8d1144940d9505d88f16525dc3e8/" target="_blank">
-    📱 Uygun fiyatlı elektronik ürünleri incele
-</a>
+app2 dosyasında render template index2 diyor kral direkt bu index2 yi komple düzenleyip at da siteyi zenginleştirelim ayrıca şu reklamı da doğru şekilde ekle
