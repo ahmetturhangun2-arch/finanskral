@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, redirect, url_for
+
+import csv
+from datetime import datetime
+from pathlib import Path
 
 app = Flask(__name__)
 
@@ -65,6 +69,21 @@ def build_car_tips(km_basi_maliyet, yakit_share_pct, arac_skor):
     return tips[:3]
 
 
+def save_lead(payload):
+    data_dir = Path(__file__).resolve().parent / "data"
+    data_dir.mkdir(exist_ok=True)
+    csv_path = data_dir / "lead_requests.csv"
+    fieldnames = [
+        "timestamp", "source", "name", "email", "phone", "goal", "summary", "page"
+    ]
+    file_exists = csv_path.exists()
+    with csv_path.open("a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({key: payload.get(key, "") for key in fieldnames})
+
+
 @app.route("/robots.txt")
 def robots_txt():
     content = """User-agent: *
@@ -93,7 +112,9 @@ def sitemap_xml():
 def home():
     maas_sonuc = None
     arac_sonuc = None
-    active_tab = "maas"
+    active_tab = request.args.get("tab", "maas")
+    lead_status = request.args.get("lead")
+    lead_source = request.args.get("source")
 
     site_url = request.url_root.rstrip("/") + "/"
     page_title = "Maaş Gelir Gider ve Araç Kullanım Maliyeti Hesaplama | FinansKral"
@@ -362,8 +383,25 @@ def home():
         site_url=site_url,
         page_title=page_title,
         meta_description=meta_description,
+        lead_status=lead_status,
+        lead_source=lead_source,
     )
 
+
+@app.route("/capture-lead", methods=["POST"])
+def capture_lead():
+    source = request.form.get("source", "maas")
+    save_lead({
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "source": source,
+        "name": request.form.get("lead_name", "").strip(),
+        "email": request.form.get("lead_email", "").strip(),
+        "phone": request.form.get("lead_phone", "").strip(),
+        "goal": request.form.get("lead_goal", "").strip(),
+        "summary": request.form.get("lead_summary", "").strip(),
+        "page": request.url_root.rstrip("/") + "/",
+    })
+    return redirect(url_for("home", lead="success", source=source, tab=source))
 
 @app.route("/about")
 def about():

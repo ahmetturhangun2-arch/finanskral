@@ -188,10 +188,15 @@
 
             <section class="hero">
                 <div class="hero-badge">Premium Finansal Araçlar</div>
-                <h1 class="headline-premium">Maaş Gelir Gider ve Araç Kullanım Maliyeti Hesaplama</h1>
+                <h1 class="headline-premium">Maaşını, giderlerini ve araç maliyetini tek ekranda net gör</h1>
                 <p class="subtitle">
-                    Maaş gelir-gider dengenizi ve araç kullanım maliyetlerinizi profesyonel seviyede analiz edin.
+                    Sadece toplamı değil; yıllık etkiyi, en büyük giderini ve sana özel tasarruf fırsatlarını da gösteren karar destek ekranı.
                 </p>
+
+                <div class="hero-actions">
+                    <a href="#maas-tab" class="hero-cta primary" onclick="showTab('maas'); return false;">Maaş analizine başla</a>
+                    <a href="#arac-tab" class="hero-cta secondary" onclick="showTab('arac'); return false;">Araç maliyetini hesapla</a>
+                </div>
 
                 <div class="hero-stats">
                     <div class="hero-stat">
@@ -199,15 +204,36 @@
                         <small>Hesaplayıcı</small>
                     </div>
                     <div class="hero-stat">
-                        <span>Akıllı</span>
-                        <small>Otomatik veri</small>
+                        <span>60 sn</span>
+                        <small>Hızlı sonuç</small>
                     </div>
                     <div class="hero-stat">
-                        <span>Detaylı</span>
-                        <small>Premium görünüm</small>
+                        <span>Yıllık</span>
+                        <small>Etki analizi</small>
                     </div>
                 </div>
             </section>
+
+            <section class="value-strip">
+                <div class="value-card">
+                    <strong>Tek ekranda içgörü</strong>
+                    <span>Toplam, dağılım, benchmark ve öneri aynı akışta.</span>
+                </div>
+                <div class="value-card">
+                    <strong>Detaylı analiz iste</strong>
+                    <span>Sonuç ekranından iletişim bırak, analiz özetini kaydet.</span>
+                </div>
+                <div class="value-card">
+                    <strong>Karar odaklı tasarım</strong>
+                    <span>“Nereye gidiyor?” sorusundan “Ne yapmalıyım?” aşamasına geç.</span>
+                </div>
+            </section>
+
+            {% if lead_status == "success" %}
+            <div class="lead-alert success">
+                <strong>Analiz talebin alındı.</strong> {{ "Maaş" if lead_source == "maas" else "Araç" }} tarafındaki özetin kaydedildi. Sonucu kaydetmeyi ve PDF olarak dışa aktarmayı da kullanabilirsin.
+            </div>
+            {% endif %}
 
             <section class="fuel-window card premium-panel">
                 <div class="fuel-window-header">
@@ -292,6 +318,34 @@
                     {% endif %}
                 </div>
             </div>
+
+
+            <section class="how-it-works card premium-panel">
+                <div class="card-header">
+                    <div>
+                        <p class="card-kicker">Dönüşüm Odaklı Akış</p>
+                        <h2>Bu araç sana ne kazandırır?</h2>
+                    </div>
+                    <div class="card-icon">⚡</div>
+                </div>
+                <div class="process-grid">
+                    <div class="process-step">
+                        <span>1</span>
+                        <strong>Değerini gir</strong>
+                        <p>Maaş veya araç maliyeti verilerini birkaç alanda doldur.</p>
+                    </div>
+                    <div class="process-step">
+                        <span>2</span>
+                        <strong>Şok etkisini gör</strong>
+                        <p>Yıllık etki, en büyük gider ve ortalamaya göre farkını anında keşfet.</p>
+                    </div>
+                    <div class="process-step">
+                        <span>3</span>
+                        <strong>Sonucu kaydet</strong>
+                        <p>Özeti tarayıcıya kaydet, PDF olarak dışa aktar veya detaylı analiz talep et.</p>
+                    </div>
+                </div>
+            </section>
 
             <div class="tabs">
                 <button type="button" class="tab-btn" id="maas-btn" onclick="showTab('maas')">Maaş Gelir-Gider</button>
@@ -411,8 +465,35 @@
                         </div>
                     </div>
 
+                    <div class="lead-capture-card">
+                        <div>
+                            <p class="card-kicker">Detaylı Analiz</p>
+                            <h3>Bu sonucu kaybetme</h3>
+                            <p class="card-desc">İstersen analiz özetini kaydet, PDF olarak dışa aktar veya iletişim bilgini bırakıp detaylı analiz talep et.</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button type="button" class="mini-toggle-btn" onclick="saveLeadSnapshot('maas')">Sonucu kaydet</button>
+                            <button type="button" class="mini-toggle-btn" onclick="printSection('maas-report')">PDF / Yazdır</button>
+                        </div>
+                        <form method="POST" action="{{ url_for('capture_lead') }}" class="lead-form">
+                            <input type="hidden" name="source" value="maas">
+                            <input type="hidden" name="lead_summary" value="Net maaş: {{ maas_sonuc.net_maas }} | Toplam gider: {{ maas_sonuc.toplam_gider }} | Ay sonu kalan: {{ maas_sonuc.ay_sonu_kalan }} | En büyük gider: {{ maas_sonuc.biggest_expense_label }}">
+                            <div class="lead-grid">
+                                <input type="text" name="lead_name" placeholder="Adın" required>
+                                <input type="email" name="lead_email" placeholder="E-posta adresin" required>
+                                <input type="text" name="lead_phone" placeholder="Telefon (opsiyonel)">
+                                <select name="lead_goal">
+                                    <option value="">Önceliğin ne?</option>
+                                    <option value="tasarruf">Tasarrufu artırmak</option>
+                                    <option value="gider azaltmak">Giderleri azaltmak</option>
+                                    <option value="ek gelir">Ek gelir planı yapmak</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="lead-submit">Detaylı analizimi kaydet</button>
+                        </form>
+                    </div>
 
-                    <div class="result">
+                    <div class="result" id="maas-report">
                         <h3>Maaş Sonuçları</h3>
 
                         <div class="result-grid">
@@ -583,8 +664,35 @@
                         </div>
                     </div>
 
+                    <div class="lead-capture-card">
+                        <div>
+                            <p class="card-kicker">Detaylı Analiz</p>
+                            <h3>Araç maliyeti özetini kaydet</h3>
+                            <p class="card-desc">Aylık ve yıllık maliyet görünümünü kaydet, PDF olarak dışa aktar veya detaylı analiz talebi bırak.</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button type="button" class="mini-toggle-btn" onclick="saveLeadSnapshot('arac')">Sonucu kaydet</button>
+                            <button type="button" class="mini-toggle-btn" onclick="printSection('arac-report')">PDF / Yazdır</button>
+                        </div>
+                        <form method="POST" action="{{ url_for('capture_lead') }}" class="lead-form">
+                            <input type="hidden" name="source" value="arac">
+                            <input type="hidden" name="lead_summary" value="Aylık toplam: {{ arac_sonuc.aylik_toplam }} | Yıllık toplam: {{ arac_sonuc.yearly_total }} | KM başına maliyet: {{ arac_sonuc.km_basi_maliyet }} | En büyük gider: {{ arac_sonuc.biggest_cost_label }}">
+                            <div class="lead-grid">
+                                <input type="text" name="lead_name" placeholder="Adın" required>
+                                <input type="email" name="lead_email" placeholder="E-posta adresin" required>
+                                <input type="text" name="lead_phone" placeholder="Telefon (opsiyonel)">
+                                <select name="lead_goal">
+                                    <option value="">Önceliğin ne?</option>
+                                    <option value="yakit">Yakıt maliyetini düşürmek</option>
+                                    <option value="arac degisimi">Araç değişimi değerlendirmek</option>
+                                    <option value="bakim">Bakım / sigorta optimizasyonu</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="lead-submit">Araç analizimi kaydet</button>
+                        </form>
+                    </div>
 
-                    <div class="result">
+                    <div class="result" id="arac-report">
                         <h3>Araç Sonuçları</h3>
 
                         <div class="result-grid">
@@ -717,6 +825,37 @@
             if (!manualFuelMode) {
                 setFuelPriceBySelection();
             }
+        }
+
+        function saveLeadSnapshot(type) {
+            let payload = {};
+            if (type === 'maas') {
+                payload = {
+                    type: 'maas',
+                    netMaas: '{{ maas_sonuc.net_maas if maas_sonuc else "" }}',
+                    toplamGider: '{{ maas_sonuc.toplam_gider if maas_sonuc else "" }}',
+                    aySonuKalan: '{{ maas_sonuc.ay_sonu_kalan if maas_sonuc else "" }}'
+                };
+            } else {
+                payload = {
+                    type: 'arac',
+                    aylikToplam: '{{ arac_sonuc.aylik_toplam if arac_sonuc else "" }}',
+                    yillikToplam: '{{ arac_sonuc.yearly_total if arac_sonuc else "" }}',
+                    kmBasi: '{{ arac_sonuc.km_basi_maliyet if arac_sonuc else "" }}'
+                };
+            }
+            localStorage.setItem('finanskral_' + type + '_snapshot', JSON.stringify(payload));
+            alert('Özet tarayıcına kaydedildi.');
+        }
+
+        function printSection(sectionId) {
+            const node = document.getElementById(sectionId);
+            if (!node) return;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>FinansKral Analiz Özeti</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111} h3{margin-top:0} .result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px} .result-item,.result-total{border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px}</style></head><body>' + node.innerHTML + '</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
         }
 
         document.addEventListener("DOMContentLoaded", function () {
