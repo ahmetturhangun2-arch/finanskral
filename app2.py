@@ -12,6 +12,10 @@ ADSENSE_LEFT_SLOT = "5555555555"
 ADSENSE_RIGHT_SLOT = "6666666666"
 
 
+AVERAGE_MONTHLY_CAR_COST = 6500
+AVERAGE_SAVINGS_RATE = 20
+
+
 def format_tl(value):
     formatted = f"{value:,.2f}"
     formatted = formatted.replace(",", "X").replace(".", ",").replace("X", ".")
@@ -20,6 +24,45 @@ def format_tl(value):
 
 def clamp(value, min_value, max_value):
     return max(min_value, min(value, max_value))
+
+
+def safe_float(value):
+    try:
+        return float(value or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def build_salary_tips(savings_rate, biggest_expense_label, ay_sonu_kalan):
+    tips = []
+    if savings_rate < 10:
+        tips.append("Gelirinin en az %10'unu kenara koyacak otomatik bir birikim hedefi belirle.")
+    if biggest_expense_label == "Kira":
+        tips.append("Kira bütçeni gözden geçir; toplam gelirin %30–35 bandı daha sürdürülebilir olur.")
+    elif biggest_expense_label == "Market":
+        tips.append("Market giderleri için haftalık limit belirleyip toplu alışverişe geçmeyi dene.")
+    elif biggest_expense_label == "Fatura":
+        tips.append("Fatura kalemlerini tek tek inceleyip kullanmadığın abonelikleri kapat.")
+    elif biggest_expense_label == "Diğer":
+        tips.append("‘Diğer giderler’ kalemini parçalayarak hangi harcamanın bütçeyi deldiğini tespit et.")
+    if ay_sonu_kalan < 0:
+        tips.append("Ay sonu eksiye düştüğün için önce büyük gider kalemini küçült, sonra ek gelir alanı aç.")
+    else:
+        tips.append("Pozitif kalan tutarı aylık yatırım veya acil durum fonu için ayrı bir hesaba aktar.")
+    return tips[:3]
+
+
+def build_car_tips(km_basi_maliyet, yakit_share_pct, arac_skor):
+    tips = []
+    if yakit_share_pct >= 55:
+        tips.append("Yakıt gideri toplam maliyetin büyük kısmını oluşturuyor; sürüş stilini ve rota planını optimize et.")
+    if km_basi_maliyet > 7:
+        tips.append("KM başı maliyet yüksek; daha ekonomik lastik, bakım planı veya alternatif araç tipi değerlendirmesi yap.")
+    if arac_skor < 40:
+        tips.append("Bu araç kullanım profili pahalı görünüyor; daha düşük tüketimli araç seçeneği uzun vadede ciddi fark yaratabilir.")
+    if len(tips) < 3:
+        tips.append("Sigorta ve bakım kalemlerini yılda en az bir kez karşılaştırarak toplam maliyeti aşağı çekebilirsin.")
+    return tips[:3]
 
 
 @app.route("/robots.txt")
@@ -64,20 +107,20 @@ def home():
             "label": "İstanbul Avrupa",
             "gasoline": 62.70,
             "diesel": 71.59,
-            "lpg": 34.99
+            "lpg": 34.99,
         },
         "ankara": {
             "label": "Ankara",
             "gasoline": 63.67,
             "diesel": 72.71,
-            "lpg": 34.87
+            "lpg": 34.87,
         },
         "izmir": {
             "label": "İzmir",
             "gasoline": 63.94,
             "diesel": 72.99,
-            "lpg": 34.79
-        }
+            "lpg": 34.79,
+        },
     }
 
     selected_city = request.form.get("fuel_city", "istanbul_avrupa")
@@ -94,7 +137,7 @@ def home():
         "kira": "",
         "fatura": "",
         "market": "",
-        "diger": ""
+        "diger": "",
     }
 
     arac_form = {
@@ -106,7 +149,7 @@ def home():
         "sigorta": "",
         "bakim": "",
         "mtv": "",
-        "manuel_yakit": "off"
+        "manuel_yakit": "off",
     }
 
     if request.method == "POST":
@@ -123,13 +166,13 @@ def home():
             maas_form["market"] = request.form.get("market", "")
             maas_form["diger"] = request.form.get("diger", "")
 
-            brut = float(request.form.get("brut", 0) or 0)
-            yemek = float(request.form.get("yemek", 0) or 0)
-            yol = float(request.form.get("yol", 0) or 0)
-            kira = float(request.form.get("kira", 0) or 0)
-            fatura = float(request.form.get("fatura", 0) or 0)
-            market = float(request.form.get("market", 0) or 0)
-            diger = float(request.form.get("diger", 0) or 0)
+            brut = safe_float(request.form.get("brut"))
+            yemek = safe_float(request.form.get("yemek"))
+            yol = safe_float(request.form.get("yol"))
+            kira = safe_float(request.form.get("kira"))
+            fatura = safe_float(request.form.get("fatura"))
+            market = safe_float(request.form.get("market"))
+            diger = safe_float(request.form.get("diger"))
 
             sgk = brut * 0.14
             issizlik = brut * 0.01
@@ -142,11 +185,21 @@ def home():
             isveren_sgk = brut * 0.155
             isveren_maliyeti = brut + isveren_sgk + yemek + yol
 
-            toplam_gider = kira + fatura + market + diger
+            total_expenses = {
+                "Kira": kira,
+                "Fatura": fatura,
+                "Market": market,
+                "Diğer": diger,
+            }
+            toplam_gider = sum(total_expenses.values())
             ay_sonu_kalan = net_maas - toplam_gider
-
+            yillik_gider = toplam_gider * 12
+            yillik_kalan = ay_sonu_kalan * 12
+            savings_rate = (ay_sonu_kalan / net_maas * 100) if net_maas > 0 else 0
             gider_orani = (toplam_gider / net_maas * 100) if net_maas > 0 else 100
             maas_skor = round(clamp(100 - gider_orani, 0, 100))
+            biggest_expense_label, biggest_expense_value = max(total_expenses.items(), key=lambda item: item[1])
+            benchmark_gap = ay_sonu_kalan - (net_maas * (AVERAGE_SAVINGS_RATE / 100))
 
             if maas_skor >= 70:
                 maas_skor_yorum = "Güçlü denge"
@@ -154,6 +207,13 @@ def home():
                 maas_skor_yorum = "Orta denge"
             else:
                 maas_skor_yorum = "Zayıf denge"
+
+            if benchmark_gap >= 0:
+                benchmark_text = "Ortalama birikim seviyesinin üzerindesin"
+            else:
+                benchmark_text = "Ortalama birikim seviyesinin altındasın"
+
+            salary_tips = build_salary_tips(savings_rate, biggest_expense_label, ay_sonu_kalan)
 
             maas_sonuc = {
                 "brut_maas": format_tl(brut),
@@ -177,7 +237,19 @@ def home():
                 "net_maas_raw": net_maas,
                 "toplam_gider_raw": toplam_gider,
                 "maas_skor": maas_skor,
-                "maas_skor_yorum": maas_skor_yorum
+                "maas_skor_yorum": maas_skor_yorum,
+                "yillik_gider": format_tl(yillik_gider),
+                "yillik_kalan": format_tl(yillik_kalan),
+                "savings_rate": round(savings_rate, 1),
+                "biggest_expense_label": biggest_expense_label,
+                "biggest_expense_value": format_tl(biggest_expense_value),
+                "biggest_expense_raw": biggest_expense_value,
+                "benchmark_gap": format_tl(benchmark_gap),
+                "benchmark_gap_raw": benchmark_gap,
+                "benchmark_text": benchmark_text,
+                "tips": salary_tips,
+                "expense_labels": list(total_expenses.keys()),
+                "expense_values": list(total_expenses.values()),
             }
 
         elif form_tipi == "arac":
@@ -200,21 +272,32 @@ def home():
 
             selected_fuel_data = fuel_prices[selected_city]
 
-            km = float(request.form.get("km", 0) or 0)
-            tuketim = float(request.form.get("tuketim", 0) or 0)
-            yakit = float(request.form.get("yakit", 0) or 0)
-            sigorta = float(request.form.get("sigorta", 0) or 0)
-            bakim = float(request.form.get("bakim", 0) or 0)
-            mtv = float(request.form.get("mtv", 0) or 0)
+            km = safe_float(request.form.get("km"))
+            tuketim = safe_float(request.form.get("tuketim"))
+            yakit = safe_float(request.form.get("yakit"))
+            sigorta = safe_float(request.form.get("sigorta"))
+            bakim = safe_float(request.form.get("bakim"))
+            mtv = safe_float(request.form.get("mtv"))
 
             aylik_yakit = (km / 100) * tuketim * yakit
             aylik_sigorta = sigorta / 12
             aylik_bakim = bakim / 12
             aylik_mtv = mtv / 12
+            yearly_total = sigorta + bakim + mtv + (aylik_yakit * 12)
             aylik_toplam = aylik_yakit + aylik_sigorta + aylik_bakim + aylik_mtv
             km_basi_maliyet = aylik_toplam / km if km > 0 else 0
-
-            arac_skor = round(clamp(100 - (km_basi_maliyet * 100), 0, 100))
+            arac_skor = round(clamp(100 - (km_basi_maliyet * 10), 0, 100))
+            vehicle_costs = {
+                "Yakıt": aylik_yakit,
+                "Sigorta": aylik_sigorta,
+                "Bakım": aylik_bakim,
+                "MTV": aylik_mtv,
+            }
+            biggest_car_cost_label, biggest_car_cost_value = max(vehicle_costs.items(), key=lambda item: item[1])
+            yakit_share_pct = (aylik_yakit / aylik_toplam * 100) if aylik_toplam > 0 else 0
+            benchmark_diff = aylik_toplam - AVERAGE_MONTHLY_CAR_COST
+            cheaper_if_reduce_km = aylik_toplam - (((km * 0.85) / 100) * tuketim * yakit + aylik_sigorta + aylik_bakim + aylik_mtv)
+            cheaper_if_better_efficiency = aylik_toplam - ((km / 100) * (tuketim * 0.8) * yakit + aylik_sigorta + aylik_bakim + aylik_mtv)
 
             if arac_skor >= 70:
                 arac_skor_yorum = "Verimli kullanım"
@@ -222,6 +305,13 @@ def home():
                 arac_skor_yorum = "Orta maliyet"
             else:
                 arac_skor_yorum = "Yüksek maliyet"
+
+            if benchmark_diff <= 0:
+                benchmark_text = "Türkiye ortalama araç giderinin altında görünüyorsun"
+            else:
+                benchmark_text = "Türkiye ortalama araç giderinin üzerindesin"
+
+            car_tips = build_car_tips(km_basi_maliyet, yakit_share_pct, arac_skor)
 
             arac_sonuc = {
                 "aylik_yakit": format_tl(aylik_yakit),
@@ -236,7 +326,18 @@ def home():
                 "aylik_mtv_raw": aylik_mtv,
                 "aylik_toplam_raw": aylik_toplam,
                 "arac_skor": arac_skor,
-                "arac_skor_yorum": arac_skor_yorum
+                "arac_skor_yorum": arac_skor_yorum,
+                "yearly_total": format_tl(yearly_total),
+                "benchmark_diff": format_tl(benchmark_diff),
+                "benchmark_diff_raw": benchmark_diff,
+                "benchmark_text": benchmark_text,
+                "biggest_cost_label": biggest_car_cost_label,
+                "biggest_cost_value": format_tl(biggest_car_cost_value),
+                "tips": car_tips,
+                "save_reduce_km": format_tl(cheaper_if_reduce_km),
+                "save_better_efficiency": format_tl(cheaper_if_better_efficiency),
+                "cost_labels": list(vehicle_costs.keys()),
+                "cost_values": list(vehicle_costs.values()),
             }
 
     return render_template(
@@ -260,7 +361,7 @@ def home():
         adsense_right_slot=ADSENSE_RIGHT_SLOT,
         site_url=site_url,
         page_title=page_title,
-        meta_description=meta_description
+        meta_description=meta_description,
     )
 
 

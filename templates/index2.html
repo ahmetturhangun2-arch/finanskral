@@ -309,7 +309,7 @@
                     </div>
 
                     <p class="card-desc">
-                        Brüt maaşınızı, yan haklarınızı ve aylık giderlerinizi girerek ay sonu kalan tutarı görün.
+                        Brüt maaşınızı, yan haklarınızı ve aylık giderlerinizi girerek ay sonu kalan tutarı, yıllık etkiyi ve bütçe önerilerini görün.
                     </p>
 
                     <form method="POST" id="maasForm">
@@ -378,6 +378,39 @@
                         <h3>Maaş Dağılımı</h3>
                         <canvas id="maasChart"></canvas>
                     </div>
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <span>Yıllık Etki</span>
+                            <strong>{{ maas_sonuc.yillik_kalan }}</strong>
+                            <small>12 ay sonunda elde kalacak tahmini tutar</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Bütçeyi En Çok Zorlayan</span>
+                            <strong>{{ maas_sonuc.biggest_expense_label }}</strong>
+                            <small>{{ maas_sonuc.biggest_expense_value }}</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Tasarruf Oranı</span>
+                            <strong>%{{ maas_sonuc.savings_rate }}</strong>
+                            <small>{{ maas_sonuc.benchmark_text }}</small>
+                        </div>
+                    </div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <h3>Gider Dağılımı</h3>
+                            <canvas id="maasExpenseChart"></canvas>
+                        </div>
+                        <div class="tips-card">
+                            <h3>Hızlı İçgörüler</h3>
+                            <ul class="tips-list">
+                                {% for tip in maas_sonuc.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
 
                     <div class="result">
                         <h3>Maaş Sonuçları</h3>
@@ -420,7 +453,7 @@
                     </div>
 
                     <p class="card-desc">
-                        Şehir ve yakıt tipine göre fiyatı otomatik doldurabilir, isterseniz elle düzenleyebilirsiniz.
+                        Şehir ve yakıt tipine göre fiyatı otomatik doldurabilir; yıllık etkiyi, ortalama karşılaştırmayı ve tasarruf senaryolarını görebilirsiniz.
                     </p>
 
                     <form method="POST" id="aracForm">
@@ -503,10 +536,53 @@
                         </div>
                     </div>
 
-                    <div class="chart-card">
-                        <h3>Araç Gider Dağılımı</h3>
-                        <canvas id="aracChart"></canvas>
+
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <span>Yıllık Toplam</span>
+                            <strong>{{ arac_sonuc.yearly_total }}</strong>
+                            <small>12 ay boyunca bu kullanım profiline göre</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>En Büyük Gider</span>
+                            <strong>{{ arac_sonuc.biggest_cost_label }}</strong>
+                            <small>{{ arac_sonuc.biggest_cost_value }}</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Ortalama ile Fark</span>
+                            <strong>{{ arac_sonuc.benchmark_diff }}</strong>
+                            <small>{{ arac_sonuc.benchmark_text }}</small>
+                        </div>
                     </div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <h3>Araç Gider Dağılımı</h3>
+                            <canvas id="aracExpenseChart"></canvas>
+                        </div>
+                        <div class="tips-card">
+                            <h3>Tasarruf Fırsatları</h3>
+                            <ul class="tips-list">
+                                {% for tip in arac_sonuc.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="scenario-grid">
+                        <div class="scenario-card">
+                            <span>KM'yi %15 azaltırsan</span>
+                            <strong>{{ arac_sonuc.save_reduce_km }}</strong>
+                            <small>aylık yaklaşık tasarruf</small>
+                        </div>
+                        <div class="scenario-card">
+                            <span>Tüketimi %20 düşürürsen</span>
+                            <strong>{{ arac_sonuc.save_better_efficiency }}</strong>
+                            <small>aylık yaklaşık tasarruf</small>
+                        </div>
+                    </div>
+
 
                     <div class="result">
                         <h3>Araç Sonuçları</h3>
@@ -539,7 +615,7 @@
                     bölünmesi ile yapılır. Böylece bir aracın gerçek aylık maliyeti ve kilometre başına yükü daha net görülür.
                 </p>
                 <p>
-                    Bu sayfa, maaş hesaplama ve araç maliyeti analizi yapan kullanıcıların hızlı ve anlaşılır sonuç alabilmesi için
+                    Bu sayfa, maaş hesaplama ve araç maliyeti analizi yapan kullanıcıların sadece sonuç değil; karşılaştırma, yıllık etki ve tasarruf fırsatlarını da görmesi için
                     hazırlanmıştır. Türkiye’de günlük finans planlaması yapan kullanıcılar için pratik bir karar destek aracıdır.
                 </p>
             </section>
@@ -716,6 +792,46 @@
                     options: {
                         responsive: true,
                         plugins: { legend: { display: false } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if maas_sonuc %}
+            const maasExpenseCtx = document.getElementById('maasExpenseChart');
+            if (maasExpenseCtx) {
+                new Chart(maasExpenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {{ maas_sonuc.expense_labels|tojson }},
+                        datasets: [{
+                            data: {{ maas_sonuc.expense_values|tojson }},
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if arac_sonuc %}
+            const aracExpenseCtx = document.getElementById('aracExpenseChart');
+            if (aracExpenseCtx) {
+                new Chart(aracExpenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {{ arac_sonuc.cost_labels|tojson }},
+                        datasets: [{
+                            data: {{ arac_sonuc.cost_values|tojson }},
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
                     }
                 });
             }
