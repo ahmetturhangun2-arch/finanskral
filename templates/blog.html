@@ -1,0 +1,17 @@
+{% extends "legal_base.html" %}
+{% block title %}Finans Blog | FinansKral{% endblock %}
+{% block hero_title %}Finans Blog{% endblock %}
+{% block hero_desc %}Maaş yönetimi, bütçe, araç maliyeti ve günlük finans kararları için pratik rehberler.{% endblock %}
+{% block content %}
+<h2>Finans Rehberleri</h2>
+<p>AdSense uyumluluğu ve kullanıcı faydası için hazırlanan özgün finans rehberleri.</p>
+<div class="blog-grid">
+    {% for post in posts %}
+    <article class="blog-card">
+        <h3><a href="{{ url_for('blog_detail', slug=post.slug) }}">{{ post.title }}</a></h3>
+        <p>{{ post.description }}</p>
+        <a class="primary-link" href="{{ url_for('blog_detail', slug=post.slug) }}">Yazıyı oku</a>
+    </article>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ site_url }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css') }}?v=haberler2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="market-ticker-wrap compact-ticker">
+        <div class="simple-brand-bar">
+            <a href="{{ url_for('home') }}" class="brand mini-brand">
+                <div class="brand-mark">FK</div>
+                <div class="brand-text">
+                    <strong>FinansKral</strong>
+                    <span>Güncel ekonomi haberleri</span>
+                </div>
+            </a>
+            <a class="back-home-link" href="{{ url_for('home') }}">Hesaplayıcılara dön</a>
+        </div>
+    </div>
+
+    <main class="page-shell news-page-shell">
+        <section class="news-hero premium-panel">
+            <p class="card-kicker">Canlı Haber Akışı</p>
+            <h1>Ekonomi, piyasa ve akaryakıt haberleri</h1>
+            <p></p>
+        </section>
+
+        <section class="live-news-grid">
+            {% for item in news_items %}
+            <article class="live-news-card">
+                <div class="live-news-thumb">
+                    {% if item.favicon %}
+                    <img src="{{ item.favicon }}" alt="{{ item.source }} logosu" loading="lazy">
+                    {% else %}
+                    <span>FK</span>
+                    {% endif %}
+                    <strong>{{ item.category }}</strong>
+                </div>
+                <div class="live-news-content">
+                    <div class="live-news-meta">
+                        <span>{{ item.source }}</span>
+                        {% if item.pub_date %}<small>{{ item.pub_date }}</small>{% endif %}
+                    </div>
+                    <h2>{{ item.title }}</h2>
+                    <p>{{ item.category }} gündemine ait güncel başlık. Maaş, araç maliyeti, yakıt ve bütçe kararlarını etkileyebilecek gelişmeleri takip edin.</p>
+                    <a href="{{ item.link }}" target="_blank" rel="noopener">Kaynakta oku →</a>
+                </div>
+            </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

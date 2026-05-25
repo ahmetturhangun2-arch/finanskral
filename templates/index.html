@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="f4r5U_-G22czVWv5UfZKO_fNXXeqSo2my0iQxAv6KmY" />
+    <title>{{ page_title }}</title>
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ site_url }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+
+    <meta property="og:title" content="{{ page_title }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ site_url }}">
+    <meta property="og:site_name" content="FinansKral">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title }}">
+    <meta name="twitter:description" content="{{ meta_description }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css') }}?v=crypto2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "FinansKral",
+          "url": "{{ site_url }}"
+        },
+        {
+          "@type": "WebSite",
+          "name": "FinansKral",
+          "url": "{{ site_url }}"
+        },
+        {
+          "@type": "WebApplication",
+          "name": "FinansKral",
+          "url": "{{ site_url }}",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "description": "{{ meta_description }}",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "TRY"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8518693068868746"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Sag sabit reklam kaldirildi: Adsense onayi icin daha guvenli reklam yerlesimi kullaniliyor. -->
+
+    <div class="market-center-wrap" aria-label="Piyasa özeti ve kripto fiyatları">
+        <div class="market-column market-economy">
+            <div class="market-column-head">
+                <span>Ekonomi</span>
+                <small>Döviz / Altın</small>
+            </div>
+            <div class="tradingview-widget-container compact-market-widget fast-economy-widget">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                {
+                    "symbols": [
+                        {"proName": "FX_IDC:USDTRY", "title": "Dolar/TL"},
+                        {"proName": "FX_IDC:EURTRY", "title": "Euro/TL"},
+                        {"proName": "FX_IDC:GBPTRY", "title": "Sterlin/TL"},
+                        {"proName": "OANDA:XAUUSD", "title": "Ons Altin"},
+                        {"proName": "TVC:GOLD", "title": "Altin"},
+                        {"proName": "TVC:UKOIL", "title": "Brent Petrol"},
+                        {"proName": "BIST:XU100", "title": "BIST 100"}
+                    ],
+                    "showSymbolLogo": false,
+                    "isTransparent": true,
+                    "displayMode": "adaptive",
+                    "colorTheme": "dark",
+                    "locale": "tr"
+                }
+                </script>
+            </div>
+        </div>
+
+        <div class="market-column market-crypto">
+            <div class="market-column-head">
+                <span>Kripto</span>
+                <small>Canli fiyatlar</small>
+            </div>
+            <div class="crypto-ticker-track" id="cryptoTickerTrack">
+                {% for coin in crypto_items %}
+                <div class="crypto-ticker-card">
+                    <strong>{{ coin.symbol }}</strong>
+                    <span class="crypto-price" data-price="{{ coin.price }}">${{ "{:,.0f}".format(coin.price) if coin.price else "..." }}</span>
+                    <small class="{{ 'up' if coin.change_24h >= 0 else 'down' }}">{{ '+' if coin.change_24h >= 0 else '' }}{{ "{:.2f}".format(coin.change_24h) }}%</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function refreshCryptoTicker() {
+        const track = document.getElementById('cryptoTickerTrack');
+        if (!track) return;
+        try {
+            const response = await fetch('/api/crypto-prices');
+            const data = await response.json();
+            if (!data.items || !data.items.length) return;
+            track.innerHTML = data.items.map((coin) => {
+                const price = Number(coin.price || 0);
+                const change = Number(coin.change_24h || 0);
+                const formatted = price >= 100 ? price.toLocaleString('en-US', { maximumFractionDigits: 0 }) : price.toLocaleString('en-US', { maximumFractionDigits: 4 });
+                return `<div class="crypto-ticker-card"><strong>${coin.symbol}</strong><span class="crypto-price">$${formatted}</span><small class="${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</small></div>`;
+            }).join('');
+        } catch (error) {}
+    }
+    refreshCryptoTicker();
+    setInterval(refreshCryptoTicker, 120000);
+    </script>
+
+    <div class="news-ticker-wrap" aria-label="Güncel ekonomi haberleri">
+        <div class="news-ticker-label">Haberler</div>
+        <div class="news-ticker-track">
+            {% for item in news_items %}
+            <a href="{{ url_for('news_page') }}" class="news-ticker-item">
+                <span>{{ item.category }}</span>
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.source }}</small>
+            </a>
+            {% endfor %}
+            {% for item in news_items %}
+            <a href="{{ url_for('news_page') }}" class="news-ticker-item" aria-hidden="true">
+                <span>{{ item.category }}</span>
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.source }}</small>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="container">
+
+            {% if adsense_enabled %}
+            <div class="ad-horizontal top-ad safe-ad-gap">
+                <span class="ad-badge">Reklam</span>
+                <div class="ad-horizontal-box">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="{{ adsense_client }}"
+                         data-ad-slot="{{ adsense_top_slot }}"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </div>
+            {% endif %}
+
+            <header class="topbar">
+                <div class="brand">
+                    <div class="brand-mark">FK</div>
+                    <div class="brand-text">
+                        <strong>FinansKral</strong>
+                        <span>Karar destek araçları</span>
+                    </div>
+                </div>
+
+                <nav class="topnav">
+                    <a href="#maas-tab" onclick="showTab('maas', true); return false;">Maaş</a>
+                    <a href="#arac-tab" onclick="showTab('arac', true); return false;">Araç</a>
+                    <a href="#yasam-maliyeti">Şehir Maliyeti</a>
+                    <a href="#risk-rehberi">Risk Rehberi</a>
+                    <a href="{{ url_for('news_page') }}">Haberler</a>
+                    <a href="{{ url_for('office_tools') }}">Ofis Araçları</a>
+                </nav>
+            </header>
+
+            <section class="hero">
+                <div class="hero-badge">Premium Finansal Araçlar</div>
+                <h1 class="headline-premium">Maaşını, giderlerini ve araç maliyetini tek ekranda net gör</h1>
+                <p class="subtitle">
+                    Sadece toplamı değil; yıllık etkiyi, en büyük giderini ve sana özel tasarruf fırsatlarını da gösteren karar destek ekranı.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#maas-tab" class="hero-cta primary" onclick="showTab('maas', true); return false;">Maaş analizine başla</a>
+                    <a href="#arac-tab" class="hero-cta secondary" onclick="showTab('arac', true); return false;">Araç maliyetini hesapla</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span>2</span>
+                        <small>Finans aracı</small>
+                    </div>
+                    <div class="hero-stat">
+                        <span>60 sn</span>
+                        <small>Hızlı sonuç</small>
+                    </div>
+                    <div class="hero-stat">
+                        <span>9+</span>
+                        <small>Finans içgörüsü</small>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="office-home-panel" id="ofis-araclari">
+                <div>
+                    <p class="card-kicker">Ofis Araç Merkezi</p>
+                    <h2>Excel, Word ve PDF araçlarını FinansKral'a ekledik</h2>
+                    <p>Ofis çalışanları, muhasebe işleriyle uğraşanlar ve bütçe takibi yapanlar için dosya dönüştürme ve iş hayatı hesaplayıcıları tek ekranda.</p>
+                    <a class="hero-cta primary" href="{{ url_for('office_tools') }}">Ofis araçlarını aç</a>
+                </div>
+                <div class="office-home-list">
+                    <span>Excel → PDF</span>
+                    <span>Word → PDF</span>
+                    <span>PDF birleştir</span>
+                    <span>PDF sıkıştır</span>
+                    <span>Maaş zam hesapla</span>
+                    <span>Fazla mesai hesapla</span>
+                    <span>Enflasyon kaybı</span>
+                    <span>PDF rapor çıktısı</span>
+                </div>
+            </section>
+
+            <section class="value-strip">
+                <div class="value-card">
+                    <strong>Tek ekranda içgörü</strong>
+                    <span>Toplam, dağılım, benchmark ve öneri aynı akışta.</span>
+                </div>
+                <div class="value-card">
+                    <strong>Detaylı analiz iste</strong>
+                    <span>Sonuç ekranından iletişim bırak, analiz özetini kaydet.</span>
+                </div>
+                <div class="value-card">
+                    <strong>Karar odaklı tasarım</strong>
+                    <span>“Nereye gidiyor?” sorusundan “Ne yapmalıyım?” aşamasına geç.</span>
+                </div>
+            </section>
+
+            <section class="impact-ticker card premium-panel" aria-label="Günlük ekonomi etkisi">
+                <div class="impact-head">
+                    <div>
+                        <p class="card-kicker">Günlük Ekonomi Etkisi</p>
+                        <h2>Bugünkü finans kararlarını etkileyen başlıklar</h2>
+                    </div>
+                    <a href="{{ url_for('news_page') }}" class="mini-link">Haber akışını gör</a>
+                </div>
+                <div class="impact-scroll">
+                    {% for impact in daily_economy_impacts %}
+                    <div class="impact-pill">
+                        <span>{{ impact.label }}</span>
+                        <strong>{{ impact.title }}</strong>
+                        <small>{{ impact.metric }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="yasam-maliyeti" class="city-cost-section card premium-panel">
+                <div class="section-title-row">
+                    <div>
+                        <p class="card-kicker">Şehir Yaşam Maliyeti</p>
+                        <h2>Türkiye şehirlerine göre aylık bütçe tahmini</h2>
+                    </div>
+                    <span class="section-badge">SEO uyumlu karşılaştırma</span>
+                </div>
+                <div class="city-budget-tool">
+                    <div class="city-budget-controls">
+                        <label>
+                            Şehir seç
+                            <select id="cityBudgetSelect">
+                                {% for city in city_living_costs %}
+                                <option value="{{ loop.index0 }}">{{ city.city }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            Profil seç
+                            <select id="cityProfileSelect">
+                                <option value="student">Öğrenci</option>
+                                <option value="single">Tek yaşayan</option>
+                                <option value="car">Araç bütçesi</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="city-budget-result">
+                        <span id="cityBudgetLabel">İstanbul / Öğrenci</span>
+                        <strong id="cityBudgetValue">28.000 - 42.000 TL</strong>
+                        <small id="cityBudgetNote">Kira ve ulaşım yükü yüksek.</small>
+                    </div>
+                </div>
+
+                <div class="city-cost-grid">
+                    {% for city in city_living_costs %}
+                    <article class="city-cost-card" data-city-index="{{ loop.index0 }}" data-student="{{ city.student }}" data-single="{{ city.single }}" data-car="{{ city.car }}" data-note="{{ city.note }}" data-city="{{ city.city }}">
+                        <h3>{{ city.city }}</h3>
+                        <p>{{ city.note }}</p>
+                        <div><span>Öğrenci</span><strong>{{ city.student }}</strong></div>
+                        <div><span>Tek yaşayan</span><strong>{{ city.single }}</strong></div>
+                        <div><span>Araç bütçesi</span><strong>{{ city.car }}</strong></div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="risk-rehberi" class="death-zone-section card premium-panel">
+                <div class="section-title-row">
+                    <div>
+                        <p class="card-kicker">Finansal Ölüm Bölgeleri</p>
+                        <h2>Maaşı ve bütçeyi en hızlı eriten riskler</h2>
+                    </div>
+                    <span class="section-badge">Paylaşılabilir rehber</span>
+                </div>
+                <div class="death-zone-grid">
+                    {% for item in financial_death_zones %}
+                    <article class="death-zone-card">
+                        <strong>{{ loop.index }}</strong>
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.desc }}</p>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="native-ad-preview">
+                <span>Reklam Alanı</span>
+                <strong>Finans uygulamaları, sigorta teklifleri veya sponsorlu tasarruf önerileri burada doğal kart olarak gösterilebilir.</strong>
+            </section>
+
+
+            {% if lead_status == "success" %}
+            <div class="lead-alert success">
+                <strong>Analiz talebin alındı.</strong> {{ "Maaş" if lead_source == "maas" else "Araç" }} tarafındaki özetin kaydedildi. Sonucu kaydetmeyi ve PDF olarak dışa aktarmayı da kullanabilirsin.
+            </div>
+            {% endif %}
+
+            <section class="fuel-window card premium-panel">
+                <div class="fuel-window-header">
+                    <div>
+                        <p class="card-kicker">Türkiye Akaryakıt Görünümü</p>
+                        <h2>Türkiye Güncel Yakıt Fiyatları</h2>
+                    </div>
+                    <div class="card-icon">⛽</div>
+                </div>
+
+                <p class="card-desc">
+                    Şehir seçerek benzin, motorin ve LPG fiyatlarını hızlıca görüntüleyin.
+                </p>
+
+                <form method="POST" class="fuel-city-form">
+                    <input type="hidden" name="form_type" value="arac">
+                    <input type="hidden" name="km" value="{{ arac_form.km }}">
+                    <input type="hidden" name="tuketim" value="{{ arac_form.tuketim }}">
+                    <input type="hidden" name="yakit_tipi" value="{{ arac_form.yakit_tipi }}">
+                    <input type="hidden" name="yakit" value="{{ arac_form.yakit }}">
+                    <input type="hidden" name="sigorta" value="{{ arac_form.sigorta }}">
+                    <input type="hidden" name="bakim" value="{{ arac_form.bakim }}">
+                    <input type="hidden" name="mtv" value="{{ arac_form.mtv }}">
+                    <input type="hidden" name="car_income" value="{{ arac_form.car_income }}">
+                    <input type="hidden" name="manuel_yakit" value="{{ arac_form.manuel_yakit }}">
+
+                    <div class="fuel-selector-row">
+                        <div class="field-block">
+                            <label>Şehir Seç</label>
+                            <select name="fuel_city" onchange="this.form.submit()">
+                                {% for city_key, city_data in fuel_prices.items() %}
+                                <option value="{{ city_key }}" {% if city_key == selected_city %}selected{% endif %}>
+                                    {{ city_data.label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="city-highlight">
+                            <span>Seçili Şehir</span>
+                            <strong>{{ selected_fuel_data.label }}</strong>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="fuel-grid single-city">
+                    <div class="fuel-city-card glass-card">
+                        <div class="fuel-city">{{ selected_fuel_data.label }}</div>
+
+                        <div class="fuel-row">
+                            <span>Benzin</span>
+                            <strong>{{ "%.2f"|format(selected_fuel_data.gasoline)|replace(".", ",") }} TL</strong>
+                        </div>
+
+                        <div class="fuel-row">
+                            <span>Motorin</span>
+                            <strong>{{ "%.2f"|format(selected_fuel_data.diesel)|replace(".", ",") }} TL</strong>
+                        </div>
+
+                        <div class="fuel-row">
+                            <span>LPG</span>
+                            <strong>{{ "%.2f"|format(selected_fuel_data.lpg)|replace(".", ",") }} TL</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="fuel-note">{{ fuel_note }}</p>
+            </section>
+
+            {% if adsense_enabled %}
+            <div class="ad-horizontal content-ad safe-ad-gap">
+                <span class="ad-badge">Reklam</span>
+                <div class="ad-horizontal-box">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="{{ adsense_client }}"
+                         data-ad-slot="{{ adsense_content_slot }}"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <section class="how-it-works card premium-panel">
+                <div class="card-header">
+                    <div>
+                        <p class="card-kicker">Dönüşüm Odaklı Akış</p>
+                        <h2>Bu araç sana ne kazandırır?</h2>
+                    </div>
+                    <div class="card-icon">⚡</div>
+                </div>
+                <div class="process-grid">
+                    <div class="process-step">
+                        <span>1</span>
+                        <strong>Değerini gir</strong>
+                        <p>Maaş veya araç maliyeti verilerini birkaç alanda doldur.</p>
+                    </div>
+                    <div class="process-step">
+                        <span>2</span>
+                        <strong>Şok etkisini gör</strong>
+                        <p>Yıllık etki, en büyük gider ve ortalamaya göre farkını anında keşfet.</p>
+                    </div>
+                    <div class="process-step">
+                        <span>3</span>
+                        <strong>Sonucu kaydet</strong>
+                        <p>Özeti tarayıcıya kaydet, PDF olarak dışa aktar veya detaylı analiz talep et.</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="tabs">
+                <button type="button" class="tab-btn" id="maas-btn" onclick="showTab('maas', true)">Maaş Gelir-Gider</button>
+                <button type="button" class="tab-btn" id="arac-btn" onclick="showTab('arac', true)">Araç Kullanım Maliyeti</button>
+            </div>
+
+            <div id="maas-tab" class="tab-content">
+                <div class="card premium-panel">
+                    <div class="card-header">
+                        <div>
+                            <p class="card-kicker">Finans Aracı</p>
+                            <h2>Maaş Gelir-Gider Analizi</h2>
+                        </div>
+                        <div class="card-icon">₺</div>
+                    </div>
+
+                    <p class="card-desc">
+                        Brüt maaşınızı, yan haklarınızı ve aylık giderlerinizi girerek ay sonu kalan tutarı, yıllık etkiyi ve bütçe önerilerini görün.
+                    </p>
+
+                    <form method="POST" id="maasForm">
+                        <input type="hidden" name="form_type" value="maas">
+
+                        <div class="input-grid">
+                            <div>
+                                <label>Brüt Maaş</label>
+                                <input type="number" name="brut" value="{{ maas_form.brut }}" required>
+                            </div>
+
+                            <div>
+                                <label>Yemek</label>
+                                <input type="number" name="yemek" value="{{ maas_form.yemek }}">
+                            </div>
+
+                            <div>
+                                <label>Yol</label>
+                                <input type="number" name="yol" value="{{ maas_form.yol }}">
+                            </div>
+
+                            <div>
+                                <label>Kira</label>
+                                <input type="number" name="kira" value="{{ maas_form.kira }}">
+                            </div>
+
+                            <div>
+                                <label>Fatura</label>
+                                <input type="number" name="fatura" value="{{ maas_form.fatura }}">
+                            </div>
+
+                            <div>
+                                <label>Market</label>
+                                <input type="number" name="market" value="{{ maas_form.market }}">
+                            </div>
+
+                            <div class="full-span">
+                                <label>Diğer Giderler</label>
+                                <input type="number" name="diger" value="{{ maas_form.diger }}">
+                            </div>
+                        </div>
+
+                        <button type="submit">Detaylı Maaş Analizi Yap</button>
+                    </form>
+
+                    {% if maas_sonuc %}
+                    <div class="score-strip">
+                        <div class="score-card">
+                            <span>Finansal Denge Skoru</span>
+                            <strong>{{ maas_sonuc.maas_skor }}/100</strong>
+                            <small>{{ maas_sonuc.maas_skor_yorum }}</small>
+                        </div>
+                        <div class="score-card">
+                            <span>Net Maaş</span>
+                            <strong>{{ maas_sonuc.net_maas }}</strong>
+                            <small>Kesintiler sonrası</small>
+                        </div>
+                        <div class="score-card">
+                            <span>Ay Sonu Kalan</span>
+                            <strong>{{ maas_sonuc.ay_sonu_kalan }}</strong>
+                            <small>Giderler sonrası</small>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Maaş Dağılımı</h3>
+                        <canvas id="maasChart"></canvas>
+                    </div>
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <span>Yıllık Etki</span>
+                            <strong>{{ maas_sonuc.yillik_kalan }}</strong>
+                            <small>12 ay sonunda elde kalacak tahmini tutar</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Bütçeyi En Çok Zorlayan</span>
+                            <strong>{{ maas_sonuc.biggest_expense_label }}</strong>
+                            <small>{{ maas_sonuc.biggest_expense_value }}</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Tasarruf Oranı</span>
+                            <strong>%{{ maas_sonuc.savings_rate }}</strong>
+                            <small>{{ maas_sonuc.benchmark_text }}</small>
+                        </div>
+                    </div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <h3>Gider Dağılımı</h3>
+                            <canvas id="maasExpenseChart"></canvas>
+                        </div>
+                        <div class="tips-card">
+                            <h3>Hızlı İçgörüler</h3>
+                            <ul class="tips-list">
+                                {% for tip in maas_sonuc.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="share-result-card salary-share">
+                        <div>
+                            <p class="card-kicker">Paylaşılabilir Sonuç</p>
+                            <h3>{{ maas_sonuc.viral.headline }}</h3>
+                            <p>{{ maas_sonuc.viral.line1 }}</p>
+                            <p>{{ maas_sonuc.viral.line2 }}</p>
+                            <p>{{ maas_sonuc.viral.line3 }}</p>
+                        </div>
+                        <button type="button" class="mini-toggle-btn" onclick="copyShareText('maas')">Story metnini kopyala</button>
+                    </div>
+
+                    <div class="lead-capture-card">
+                        <div>
+                            <p class="card-kicker">Detaylı Analiz</p>
+                            <h3>Bu sonucu kaybetme</h3>
+                            <p class="card-desc">İstersen analiz özetini kaydet, PDF olarak dışa aktar veya iletişim bilgini bırakıp detaylı analiz talep et.</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button type="button" class="mini-toggle-btn" onclick="saveLeadSnapshot('maas')">Sonucu kaydet</button>
+                            <button type="button" class="mini-toggle-btn" onclick="printSection('maas-report')">PDF / Yazdır</button>
+                        </div>
+                        <form method="POST" action="{{ url_for('capture_lead') }}" class="lead-form">
+                            <input type="hidden" name="source" value="maas">
+                            <input type="hidden" name="lead_summary" value="Net maaş: {{ maas_sonuc.net_maas }} | Toplam gider: {{ maas_sonuc.toplam_gider }} | Ay sonu kalan: {{ maas_sonuc.ay_sonu_kalan }} | En büyük gider: {{ maas_sonuc.biggest_expense_label }}">
+                            <div class="lead-grid">
+                                <input type="text" name="lead_name" placeholder="Adın" required>
+                                <input type="email" name="lead_email" placeholder="E-posta adresin" required>
+                                <input type="text" name="lead_phone" placeholder="Telefon (opsiyonel)">
+                                <select name="lead_goal">
+                                    <option value="">Önceliğin ne?</option>
+                                    <option value="tasarruf">Tasarrufu artırmak</option>
+                                    <option value="gider azaltmak">Giderleri azaltmak</option>
+                                    <option value="ek gelir">Ek gelir planı yapmak</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="lead-submit">Detaylı analizimi kaydet</button>
+                        </form>
+                    </div>
+
+                    <div class="result" id="maas-report">
+                        <h3>Maaş Sonuçları</h3>
+
+                        <div class="result-grid">
+                            <div class="result-item"><span>Brüt Maaş</span><strong>{{ maas_sonuc.brut_maas }}</strong></div>
+                            <div class="result-item"><span>SGK Kesintisi</span><strong>{{ maas_sonuc.sgk }}</strong></div>
+                            <div class="result-item"><span>İşsizlik Kesintisi</span><strong>{{ maas_sonuc.issizlik }}</strong></div>
+                            <div class="result-item"><span>Vergi Matrahı</span><strong>{{ maas_sonuc.vergi_matrahi }}</strong></div>
+                            <div class="result-item"><span>Gelir Vergisi</span><strong>{{ maas_sonuc.vergi }}</strong></div>
+                            <div class="result-item"><span>Toplam Kesinti</span><strong>{{ maas_sonuc.toplam_kesinti }}</strong></div>
+                            <div class="result-item"><span>Kesintiler Sonrası Kalan</span><strong>{{ maas_sonuc.maastan_kalan }}</strong></div>
+                            <div class="result-item"><span>Yan Haklar</span><strong>{{ maas_sonuc.yan_haklar }}</strong></div>
+                            <div class="result-item"><span>Kira</span><strong>{{ maas_sonuc.kira }}</strong></div>
+                            <div class="result-item"><span>Fatura</span><strong>{{ maas_sonuc.fatura }}</strong></div>
+                            <div class="result-item"><span>Market</span><strong>{{ maas_sonuc.market }}</strong></div>
+                            <div class="result-item"><span>Diğer Giderler</span><strong>{{ maas_sonuc.diger }}</strong></div>
+                            <div class="result-item"><span>Toplam Gider</span><strong>{{ maas_sonuc.toplam_gider }}</strong></div>
+                            <div class="result-item"><span>İşveren SGK Payı</span><strong>{{ maas_sonuc.isveren_sgk }}</strong></div>
+                            <div class="result-item"><span>İşveren Toplam Maliyeti</span><strong>{{ maas_sonuc.isveren_maliyeti }}</strong></div>
+                        </div>
+
+                        <div class="result-total {% if maas_sonuc.ay_sonu_kalan_raw < 0 %}negative-total{% endif %}">
+                            <span>Ay Sonu Kalan</span>
+                            <strong>{{ maas_sonuc.ay_sonu_kalan }}</strong>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div id="arac-tab" class="tab-content">
+                <div class="card premium-panel">
+                    <div class="card-header">
+                        <div>
+                            <p class="card-kicker">Maliyet Aracı</p>
+                            <h2>Araç Kullanım Maliyeti Hesaplama</h2>
+                        </div>
+                        <div class="card-icon">🚗</div>
+                    </div>
+
+                    <p class="card-desc">
+                        Şehir ve yakıt tipine göre fiyatı otomatik doldurabilir; yıllık etkiyi, ortalama karşılaştırmayı ve tasarruf senaryolarını görebilirsiniz.
+                    </p>
+
+                    <form method="POST" id="aracForm">
+                        <input type="hidden" name="form_type" value="arac">
+                        <input type="hidden" name="manuel_yakit" id="manuel_yakit" value="{{ arac_form.manuel_yakit }}">
+
+                        <div class="input-grid">
+                            <div>
+                                <label>Şehir</label>
+                                <select name="fuel_city" id="fuel_city" onchange="setFuelPriceBySelection()">
+                                    {% for city_key, city_data in fuel_prices.items() %}
+                                    <option value="{{ city_key }}" {% if city_key == arac_form.fuel_city %}selected{% endif %}>{{ city_data.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Yakıt Tipi</label>
+                                <select name="yakit_tipi" id="yakit_tipi" onchange="setFuelPriceBySelection()">
+                                    <option value="gasoline" {% if arac_form.yakit_tipi == 'gasoline' %}selected{% endif %}>Benzin</option>
+                                    <option value="diesel" {% if arac_form.yakit_tipi == 'diesel' %}selected{% endif %}>Motorin</option>
+                                    <option value="lpg" {% if arac_form.yakit_tipi == 'lpg' %}selected{% endif %}>LPG</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Aylık KM</label>
+                                <input type="number" name="km" value="{{ arac_form.km }}" required>
+                            </div>
+
+                            <div>
+                                <label>Tüketim (lt/100km)</label>
+                                <input type="number" step="0.1" name="tuketim" value="{{ arac_form.tuketim }}" required>
+                            </div>
+
+                            <div class="full-span">
+                                <div class="fuel-price-header">
+                                    <label>Yakıt Fiyatı</label>
+                                    <button type="button" class="mini-toggle-btn" id="manualToggleBtn" onclick="toggleManualFuelPrice()">Elle Düzenle</button>
+                                </div>
+                                <input type="number" step="0.01" name="yakit" id="yakit_fiyati" value="{{ arac_form.yakit }}" required>
+                                <small class="helper-text" id="fuelHelperText">Şehir ve yakıt tipine göre otomatik doldurulur.</small>
+                            </div>
+
+                            <div>
+                                <label>Sigorta (Yıllık)</label>
+                                <input type="number" name="sigorta" value="{{ arac_form.sigorta }}" required>
+                            </div>
+
+                            <div>
+                                <label>Bakım (Yıllık)</label>
+                                <input type="number" name="bakim" value="{{ arac_form.bakim }}" required>
+                            </div>
+
+                            <div>
+                                <label>Aylık Net Geliriniz</label>
+                                <input type="number" name="car_income" value="{{ arac_form.car_income }}" placeholder="Arabam bana pahalı mı testi için">
+                            </div>
+
+                            <div>
+                                <label>MTV (Yıllık)</label>
+                                <input type="number" name="mtv" value="{{ arac_form.mtv }}" required>
+                            </div>
+                        </div>
+
+                        <button type="submit">Araç Maliyetini Hesapla</button>
+                    </form>
+
+                    {% if arac_sonuc %}
+                    <div class="score-strip">
+                        <div class="score-card">
+                            <span>Araç Maliyet Skoru</span>
+                            <strong>{{ arac_sonuc.arac_skor }}/100</strong>
+                            <small>{{ arac_sonuc.arac_skor_yorum }}</small>
+                        </div>
+                        <div class="score-card">
+                            <span>Aylık Toplam</span>
+                            <strong>{{ arac_sonuc.aylik_toplam }}</strong>
+                            <small>Tüm giderler</small>
+                        </div>
+                        <div class="score-card">
+                            <span>KM Başı</span>
+                            <strong>{{ arac_sonuc.km_basi_maliyet }}</strong>
+                            <small>Birim maliyet</small>
+                        </div>
+                    </div>
+
+
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <span>Yıllık Toplam</span>
+                            <strong>{{ arac_sonuc.yearly_total }}</strong>
+                            <small>12 ay boyunca bu kullanım profiline göre</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>En Büyük Gider</span>
+                            <strong>{{ arac_sonuc.biggest_cost_label }}</strong>
+                            <small>{{ arac_sonuc.biggest_cost_value }}</small>
+                        </div>
+                        <div class="insight-card">
+                            <span>Ortalama ile Fark</span>
+                            <strong>{{ arac_sonuc.benchmark_diff }}</strong>
+                            <small>{{ arac_sonuc.benchmark_text }}</small>
+                        </div>
+                        <div class="insight-card affordability-card {{ arac_sonuc.affordability.level }}">
+                            <span>Arabam Bana Pahalı mı?</span>
+                            <strong>{{ arac_sonuc.affordability.ratio }}</strong>
+                            <small>{{ arac_sonuc.affordability.verdict }}</small>
+                        </div>
+                    </div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <h3>Araç Gider Dağılımı</h3>
+                            <canvas id="aracExpenseChart"></canvas>
+                        </div>
+                        <div class="tips-card">
+                            <h3>Tasarruf Fırsatları</h3>
+                            <ul class="tips-list">
+                                {% for tip in arac_sonuc.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="scenario-grid">
+                        <div class="scenario-card">
+                            <span>KM'yi %15 azaltırsan</span>
+                            <strong>{{ arac_sonuc.save_reduce_km }}</strong>
+                            <small>aylık yaklaşık tasarruf</small>
+                        </div>
+                        <div class="scenario-card">
+                            <span>Tüketimi %20 düşürürsen</span>
+                            <strong>{{ arac_sonuc.save_better_efficiency }}</strong>
+                            <small>aylık yaklaşık tasarruf</small>
+                        </div>
+                    </div>
+
+
+                    <div class="share-result-card car-share">
+                        <div>
+                            <p class="card-kicker">Paylaşılabilir Sonuç</p>
+                            <h3>{{ arac_sonuc.viral.headline }}</h3>
+                            <p>{{ arac_sonuc.viral.line1 }}</p>
+                            <p>{{ arac_sonuc.viral.line2 }}</p>
+                            <p>{{ arac_sonuc.viral.line3 }}</p>
+                        </div>
+                        <button type="button" class="mini-toggle-btn" onclick="copyShareText('arac')">Story metnini kopyala</button>
+                    </div>
+
+                    <div class="lead-capture-card">
+                        <div>
+                            <p class="card-kicker">Detaylı Analiz</p>
+                            <h3>Araç maliyeti özetini kaydet</h3>
+                            <p class="card-desc">Aylık ve yıllık maliyet görünümünü kaydet, PDF olarak dışa aktar veya detaylı analiz talebi bırak.</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button type="button" class="mini-toggle-btn" onclick="saveLeadSnapshot('arac')">Sonucu kaydet</button>
+                            <button type="button" class="mini-toggle-btn" onclick="printSection('arac-report')">PDF / Yazdır</button>
+                        </div>
+                        <form method="POST" action="{{ url_for('capture_lead') }}" class="lead-form">
+                            <input type="hidden" name="source" value="arac">
+                            <input type="hidden" name="lead_summary" value="Aylık toplam: {{ arac_sonuc.aylik_toplam }} | Yıllık toplam: {{ arac_sonuc.yearly_total }} | KM başına maliyet: {{ arac_sonuc.km_basi_maliyet }} | En büyük gider: {{ arac_sonuc.biggest_cost_label }}">
+                            <div class="lead-grid">
+                                <input type="text" name="lead_name" placeholder="Adın" required>
+                                <input type="email" name="lead_email" placeholder="E-posta adresin" required>
+                                <input type="text" name="lead_phone" placeholder="Telefon (opsiyonel)">
+                                <select name="lead_goal">
+                                    <option value="">Önceliğin ne?</option>
+                                    <option value="yakit">Yakıt maliyetini düşürmek</option>
+                                    <option value="arac degisimi">Araç değişimi değerlendirmek</option>
+                                    <option value="bakim">Bakım / sigorta optimizasyonu</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="lead-submit">Araç analizimi kaydet</button>
+                        </form>
+                    </div>
+
+                    <div class="result" id="arac-report">
+                        <h3>Araç Sonuçları</h3>
+
+                        <div class="result-grid">
+                            <div class="result-item"><span>Aylık Yakıt Gideri</span><strong>{{ arac_sonuc.aylik_yakit }}</strong></div>
+                            <div class="result-item"><span>Aylık Sigorta Payı</span><strong>{{ arac_sonuc.aylik_sigorta }}</strong></div>
+                            <div class="result-item"><span>Aylık Bakım Payı</span><strong>{{ arac_sonuc.aylik_bakim }}</strong></div>
+                            <div class="result-item"><span>Aylık MTV Payı</span><strong>{{ arac_sonuc.aylik_mtv }}</strong></div>
+                            <div class="result-item"><span>KM Başına Maliyet</span><strong>{{ arac_sonuc.km_basi_maliyet }}</strong></div>
+                        </div>
+
+                        <div class="result-total">
+                            <span>Aylık Toplam Maliyet</span>
+                            <strong>{{ arac_sonuc.aylik_toplam }}</strong>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <section class="seo-content card premium-panel">
+                <h2>Maaş ve Araç Gideri Nasıl Hesaplanır?</h2>
+                <p>
+                    Maaş gelir gider hesaplama, bir kişinin aylık finansal dengesini görmek için yapılır. Brüt maaş üzerinden SGK,
+                    işsizlik kesintisi ve gelir vergisi hesaplanır; ardından yemek ve yol gibi yan haklar eklenerek net maaş bulunur.
+                </p>
+                <p>
+                    Araç kullanım maliyeti hesaplama ise yakıt tüketimi, sigorta, bakım ve MTV gibi masrafların aylık ortalamaya
+                    bölünmesi ile yapılır. Böylece bir aracın gerçek aylık maliyeti ve kilometre başına yükü daha net görülür.
+                </p>
+                <p>
+                    Bu sayfa, maaş hesaplama ve araç maliyeti analizi yapan kullanıcıların sadece sonuç değil; karşılaştırma, yıllık etki ve tasarruf fırsatlarını da görmesi için
+                    hazırlanmıştır. Türkiye’de günlük finans planlaması yapan kullanıcılar için pratik bir karar destek aracıdır.
+                </p>
+            </section>
+
+            {% if adsense_enabled %}
+            <div class="ad-horizontal bottom-ad safe-ad-gap">
+                <span class="ad-badge">Reklam</span>
+                <div class="ad-horizontal-box">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="{{ adsense_client }}"
+                         data-ad-slot="{{ adsense_bottom_slot }}"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </div>
+            {% endif %}
+
+            <footer class="footer">
+                <p>© 2026 FinansKral · Günlük finansal kararlar için pratik araçlar</p>
+                <p>
+                    <a href="/about">Hakkımızda</a>
+                    <a href="/blog">Blog</a> |
+                    <a href="/privacy">Gizlilik Politikası</a> |
+                    <a href="/cookies">Çerez Politikası</a> |
+                    <a href="/terms">Kullanım Şartları</a> |
+                    <a href="/contact">İletişim</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const fuelData = {{ fuel_prices|tojson }};
+        let manualFuelMode = {{ 'true' if arac_form.manuel_yakit == 'on' else 'false' }};
+
+        function showTab(tabName, shouldScroll = false) {
+            const maasTab = document.getElementById("maas-tab");
+            const aracTab = document.getElementById("arac-tab");
+            const maasBtn = document.getElementById("maas-btn");
+            const aracBtn = document.getElementById("arac-btn");
+
+            if (!maasTab || !aracTab || !maasBtn || !aracBtn) return;
+
+            maasTab.classList.remove("active");
+            aracTab.classList.remove("active");
+            maasBtn.classList.remove("active");
+            aracBtn.classList.remove("active");
+
+            const activeTab = tabName === "maas" ? maasTab : aracTab;
+            const activeBtn = tabName === "maas" ? maasBtn : aracBtn;
+
+            activeTab.classList.add("active");
+            activeBtn.classList.add("active");
+
+            if (shouldScroll) {
+                window.requestAnimationFrame(() => {
+                    activeTab.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+            }
+        }
+
+        function updateFuelInputState() {
+            const fuelPriceInput = document.getElementById("yakit_fiyati");
+            const manualToggleBtn = document.getElementById("manualToggleBtn");
+            const manualInput = document.getElementById("manuel_yakit");
+            const helperText = document.getElementById("fuelHelperText");
+
+            if (!fuelPriceInput || !manualToggleBtn || !manualInput || !helperText) return;
+
+            if (manualFuelMode) {
+                fuelPriceInput.removeAttribute("readonly");
+                fuelPriceInput.classList.add("editable-mode");
+                manualToggleBtn.textContent = "Otomatiğe Dön";
+                manualInput.value = "on";
+                helperText.textContent = "Elle düzenleme açık. İstersen otomatiğe dönebilirsin.";
+            } else {
+                fuelPriceInput.setAttribute("readonly", "readonly");
+                fuelPriceInput.classList.remove("editable-mode");
+                manualToggleBtn.textContent = "Elle Düzenle";
+                manualInput.value = "off";
+                helperText.textContent = "Şehir ve yakıt tipine göre otomatik doldurulur.";
+            }
+        }
+
+        function setFuelPriceBySelection() {
+            const citySelect = document.getElementById("fuel_city");
+            const fuelTypeSelect = document.getElementById("yakit_tipi");
+            const fuelPriceInput = document.getElementById("yakit_fiyati");
+
+            if (!citySelect || !fuelTypeSelect || !fuelPriceInput) return;
+            if (manualFuelMode) return;
+
+            const city = citySelect.value;
+            const fuelType = fuelTypeSelect.value;
+
+            if (fuelData[city] && fuelData[city][fuelType] !== undefined) {
+                fuelPriceInput.value = fuelData[city][fuelType].toFixed(2);
+            }
+        }
+
+        function toggleManualFuelPrice() {
+            manualFuelMode = !manualFuelMode;
+            updateFuelInputState();
+            if (!manualFuelMode) {
+                setFuelPriceBySelection();
+            }
+        }
+
+        function saveLeadSnapshot(type) {
+            let payload = {};
+            if (type === 'maas') {
+                payload = {
+                    type: 'maas',
+                    netMaas: '{{ maas_sonuc.net_maas if maas_sonuc else "" }}',
+                    toplamGider: '{{ maas_sonuc.toplam_gider if maas_sonuc else "" }}',
+                    aySonuKalan: '{{ maas_sonuc.ay_sonu_kalan if maas_sonuc else "" }}'
+                };
+            } else {
+                payload = {
+                    type: 'arac',
+                    aylikToplam: '{{ arac_sonuc.aylik_toplam if arac_sonuc else "" }}',
+                    yillikToplam: '{{ arac_sonuc.yearly_total if arac_sonuc else "" }}',
+                    kmBasi: '{{ arac_sonuc.km_basi_maliyet if arac_sonuc else "" }}'
+                };
+            }
+            localStorage.setItem('finanskral_' + type + '_snapshot', JSON.stringify(payload));
+            alert('Özet tarayıcına kaydedildi.');
+        }
+
+        function copyShareText(type) {
+            let text = '';
+            if (type === 'maas') {
+                text = `FinansKral sonucum:
+{{ maas_sonuc.viral.headline if maas_sonuc else '' }}
+{{ maas_sonuc.viral.line1 if maas_sonuc else '' }}
+{{ maas_sonuc.viral.line2 if maas_sonuc else '' }}
+{{ maas_sonuc.viral.line3 if maas_sonuc else '' }}
+finanskral.com`;
+            } else {
+                text = `FinansKral arac sonucum:
+{{ arac_sonuc.viral.headline if arac_sonuc else '' }}
+{{ arac_sonuc.viral.line1 if arac_sonuc else '' }}
+{{ arac_sonuc.viral.line2 if arac_sonuc else '' }}
+{{ arac_sonuc.viral.line3 if arac_sonuc else '' }}
+finanskral.com`;
+            }
+            navigator.clipboard.writeText(text).then(() => alert('Paylaşım metni kopyalandı.'));
+        }
+
+        function printSection(sectionId) {
+            const node = document.getElementById(sectionId);
+            if (!node) return;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>FinansKral Analiz Özeti</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111} h3{margin-top:0} .result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px} .result-item,.result-total{border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px}</style></head><body>' + node.innerHTML + '</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            showTab("{{ active_tab }}");
+            updateFuelInputState();
+            setFuelPriceBySelection();
+
+
+            const topProducts = document.querySelectorAll("#topProductSlider .top-product");
+            let topCurrent = 0;
+
+            if (topProducts.length > 1) {
+                setInterval(() => {
+                    topProducts[topCurrent].classList.remove("active");
+                    topCurrent = (topCurrent + 1) % topProducts.length;
+                    topProducts[topCurrent].classList.add("active");
+                }, 3000);
+            }
+
+
+            const cityCards = Array.from(document.querySelectorAll(".city-cost-card"));
+            const cityBudgetSelect = document.getElementById("cityBudgetSelect");
+            const cityProfileSelect = document.getElementById("cityProfileSelect");
+            const cityBudgetLabel = document.getElementById("cityBudgetLabel");
+            const cityBudgetValue = document.getElementById("cityBudgetValue");
+            const cityBudgetNote = document.getElementById("cityBudgetNote");
+
+            function updateCityBudget() {
+                if (!cityCards.length || !cityBudgetSelect || !cityProfileSelect) return;
+                const card = cityCards[Number(cityBudgetSelect.value)] || cityCards[0];
+                const profile = cityProfileSelect.value;
+                const profileName = profile === "student" ? "Öğrenci" : profile === "single" ? "Tek yaşayan" : "Araç bütçesi";
+                cityCards.forEach(item => item.classList.remove("active"));
+                card.classList.add("active");
+                cityBudgetLabel.textContent = `${card.dataset.city} / ${profileName}`;
+                cityBudgetValue.textContent = card.dataset[profile] || "-";
+                cityBudgetNote.textContent = card.dataset.note || "Seçilen şehir için tahmini aylık bütçe aralığı.";
+            }
+
+            if (cityBudgetSelect && cityProfileSelect) {
+                cityBudgetSelect.addEventListener("change", updateCityBudget);
+                cityProfileSelect.addEventListener("change", updateCityBudget);
+                cityCards.forEach((card, index) => {
+                    card.addEventListener("click", () => {
+                        cityBudgetSelect.value = String(index);
+                        updateCityBudget();
+                    });
+                });
+                updateCityBudget();
+            }
+
+            {% if maas_sonuc %}
+            const maasCtx = document.getElementById('maasChart');
+            if (maasCtx) {
+                new Chart(maasCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Net Maaş', 'Toplam Gider', 'Ay Sonu Kalan'],
+                        datasets: [{
+                            label: 'TL',
+                            data: [
+                                {{ maas_sonuc.net_maas_raw }},
+                                {{ maas_sonuc.toplam_gider_raw }},
+                                {{ maas_sonuc.ay_sonu_kalan_raw }}
+                            ],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if arac_sonuc %}
+            const aracCtx = document.getElementById('aracChart');
+            if (aracCtx) {
+                new Chart(aracCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Yakıt', 'Sigorta', 'Bakım', 'MTV'],
+                        datasets: [{
+                            label: 'TL',
+                            data: [
+                                {{ arac_sonuc.aylik_yakit_raw }},
+                                {{ arac_sonuc.aylik_sigorta_raw }},
+                                {{ arac_sonuc.aylik_bakim_raw }},
+                                {{ arac_sonuc.aylik_mtv_raw }}
+                            ],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if maas_sonuc %}
+            const maasExpenseCtx = document.getElementById('maasExpenseChart');
+            if (maasExpenseCtx) {
+                new Chart(maasExpenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {{ maas_sonuc.expense_labels|tojson }},
+                        datasets: [{
+                            data: {{ maas_sonuc.expense_values|tojson }},
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if arac_sonuc %}
+            const aracExpenseCtx = document.getElementById('aracExpenseChart');
+            if (aracExpenseCtx) {
+                new Chart(aracExpenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {{ arac_sonuc.cost_labels|tojson }},
+                        datasets: [{
+                            data: {{ arac_sonuc.cost_values|tojson }},
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            {% endif %}
+
+            {% if adsense_enabled %}
+            document.querySelectorAll(".adsbygoogle").forEach(function () {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.log("AdSense yükleme hatası:", e);
+                }
+            });
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

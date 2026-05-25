@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ site_url }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css') }}?v=office1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="page-shell office-page-shell">
+        <header class="topbar office-topbar">
+            <a href="{{ url_for('home') }}" class="brand mini-brand">
+                <div class="brand-mark">FK</div>
+                <div class="brand-text">
+                    <strong>FinansKral</strong>
+                    <span>Ofis ve finans araçları</span>
+                </div>
+            </a>
+            <nav class="topnav">
+                <a href="{{ url_for('home') }}">Ana sayfa</a>
+                <a href="{{ url_for('news_page') }}">Haberler</a>
+                <a href="{{ url_for('blog') }}">Blog</a>
+            </nav>
+        </header>
+
+        <section class="office-hero premium-panel">
+            <p class="card-kicker">Ofis Araç Merkezi</p>
+            <h1>Excel, Word, PDF ve iş hayatı hesaplamaları tek ekranda</h1>
+            <p>Maaş, bütçe ve araç analizlerinin yanında ofis çalışanlarının günlük ihtiyaç duyduğu dönüştürme ve hesaplama araçları.</p>
+        </section>
+
+        {% if request.args.get('error') %}
+        <div class="office-alert">Dosya işlenemedi. Lütfen doğru formatta dosya yüklediğinden emin ol.</div>
+        {% endif %}
+
+        <section class="office-tool-grid">
+            <article class="office-tool-card">
+                <span class="tool-icon">XLS</span>
+                <h2>Excel PDF Çevir</h2>
+                <p>Excel dosyasındaki ilk sayfalardan temiz, paylaşılabilir PDF özeti oluştur.</p>
+                <form action="{{ url_for('excel_pdf_tool') }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="excel_file" accept=".xlsx,.xlsm" required>
+                    <button type="submit">PDF indir</button>
+                </form>
+            </article>
+
+            <article class="office-tool-card">
+                <span class="tool-icon">DOC</span>
+                <h2>Word PDF Çevir</h2>
+                <p>DOCX belgesini hızlıca PDF formatına dönüştür.</p>
+                <form action="{{ url_for('word_pdf_tool') }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="word_file" accept=".docx" required>
+                    <button type="submit">PDF indir</button>
+                </form>
+            </article>
+
+            <article class="office-tool-card">
+                <span class="tool-icon">PDF</span>
+                <h2>PDF Birleştir</h2>
+                <p>Birden fazla PDF dosyasını tek PDF dosyasında birleştir.</p>
+                <form action="{{ url_for('merge_pdf_tool') }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="pdf_files" accept=".pdf" multiple required>
+                    <button type="submit">Birleştir</button>
+                </form>
+            </article>
+
+            <article class="office-tool-card">
+                <span class="tool-icon">ZIP</span>
+                <h2>PDF Sıkıştır</h2>
+                <p>PDF dosyasını yeniden optimize ederek daha hafif hale getirmeyi dener.</p>
+                <form action="{{ url_for('compress_pdf_tool') }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="pdf_file" accept=".pdf" required>
+                    <button type="submit">Sıkıştır</button>
+                </form>
+            </article>
+        </section>
+
+        <section class="office-calculator-panel premium-panel">
+            <p class="card-kicker">İş Hayatı Hesaplayıcıları</p>
+            <h2>Maaş zam, fazla mesai ve enflasyon kaybı hesapla</h2>
+            <div class="mini-calc-grid">
+                <div class="mini-calc-card">
+                    <h3>Maaş Zam Hesaplayıcı</h3>
+                    <label>Mevcut maaş</label>
+                    <input id="raiseSalary" type="number" placeholder="30000">
+                    <label>Zam oranı (%)</label>
+                    <input id="raiseRate" type="number" placeholder="25">
+                    <button type="button" onclick="calculateRaise()">Hesapla</button>
+                    <strong id="raiseResult">Yeni maaş: -</strong>
+                </div>
+
+                <div class="mini-calc-card">
+                    <h3>Fazla Mesai Hesaplayıcı</h3>
+                    <label>Aylık maaş</label>
+                    <input id="overtimeSalary" type="number" placeholder="30000">
+                    <label>Fazla mesai saati</label>
+                    <input id="overtimeHours" type="number" placeholder="12">
+                    <button type="button" onclick="calculateOvertime()">Hesapla</button>
+                    <strong id="overtimeResult">Tahmini mesai: -</strong>
+                </div>
+
+                <div class="mini-calc-card">
+                    <h3>Enflasyon Kaybı</h3>
+                    <label>Maaş</label>
+                    <input id="inflationSalary" type="number" placeholder="30000">
+                    <label>Enflasyon (%)</label>
+                    <input id="inflationRate" type="number" placeholder="40">
+                    <button type="button" onclick="calculateInflationLoss()">Hesapla</button>
+                    <strong id="inflationResult">Alım gücü kaybı: -</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="office-template-strip">
+            <div>
+                <p class="card-kicker">Ücretsiz Şablon</p>
+                <h2>Excel gider tablosu mantığında hızlı bütçe listesi</h2>
+                <p>Gelir, kira, market, yakıt, borç ve tasarruf kalemlerini düzenli takip etmek için FinansKral hesaplayıcılarını kullan.</p>
+            </div>
+            <a href="{{ url_for('home') }}#maas-tab">Maaş analizine git</a>
+        </section>
+    </main>
+
+    <script>
+        const fmt = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 });
+        function val(id){ return Number(document.getElementById(id).value || 0); }
+        function calculateRaise(){
+            const salary = val('raiseSalary');
+            const rate = val('raiseRate');
+            document.getElementById('raiseResult').textContent = 'Yeni maaş: ' + fmt.format(salary * (1 + rate / 100));
+        }
+        function calculateOvertime(){
+            const salary = val('overtimeSalary');
+            const hours = val('overtimeHours');
+            const hourly = salary / 225;
+            document.getElementById('overtimeResult').textContent = 'Tahmini mesai: ' + fmt.format(hourly * 1.5 * hours);
+        }
+        function calculateInflationLoss(){
+            const salary = val('inflationSalary');
+            const rate = val('inflationRate');
+            const protectedSalary = salary * (1 + rate / 100);
+            document.getElementById('inflationResult').textContent = 'Koruma için gerekli maaş: ' + fmt.format(protectedSalary);
+        }
+    </script>
+</body>
+</html>

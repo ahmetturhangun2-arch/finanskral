@@ -1,0 +1,21 @@
+{% extends "legal_base.html" %}
+{% block title %}{{ post.title }} | FinansKral{% endblock %}
+{% block hero_title %}{{ post.title }}{% endblock %}
+{% block hero_desc %}{{ post.description }}{% endblock %}
+{% block content %}
+<article class="article-content">
+    <p><strong>{{ post.description }}</strong></p>
+    {% for paragraph in post.content %}
+    <p>{{ paragraph }}</p>
+    {% endfor %}
+</article>
+<hr>
+<h2>Diğer Rehberler</h2>
+<ul>
+    {% for item in posts %}
+        {% if item.slug != post.slug %}
+        <li><a href="{{ url_for('blog_detail', slug=item.slug) }}">{{ item.title }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}
